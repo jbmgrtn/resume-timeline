@@ -12,7 +12,7 @@
   // minified (especially when both are regularly referenced in your plugin).
 
   // Create the defaults once
-  var pluginName = 'ResumeTimeline',
+  var pluginName = 'resumeTimeline',
       document = window.document,
       defaults = {
         propertyName: "value"
@@ -34,7 +34,7 @@
     this.init();
   }
 
-  Plugin.prototype.init = function () {
+  ResumeTimeline.prototype.init = function () {
     // Place initialization logic here
     // You already have access to the DOM element and the options via the instance,
     // e.g., this.element and this.options
@@ -46,7 +46,7 @@
     return this.each(function () {
       var plugin_data = $.data(this, 'plugin_' + pluginName);
       if (!plugin_data) {
-        var plugin = new Plugin( this, options );
+        var plugin = new ResumeTimeline( this, options );
         $.data(this, 'plugin_' + pluginName, plugin);
         plugin;
       }
