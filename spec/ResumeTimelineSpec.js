@@ -56,18 +56,20 @@ describe("ResumeTimeline", function() {
 
   describe("createPaper", function() {
     var resume_timeline;
+    var container;
 
     beforeEach(function() {
-      $("#resume-timeline").resumeTimeline();
+      container = $("#resume-timeline");
+      container.resumeTimeline();
       resume_timeline = $("#resume-timeline").data(plugin_name);
     });
 
-    it("sets the paper height to 100%", function() {
-      expect(resume_timeline.paper.height).toEqual("100%");
+    it("sets the paper height to the height of the container", function() {
+      expect(resume_timeline.paper.height).toEqual(container.height());
     });
 
-    it("sets the paper width to 100%", function() {
-      expect(resume_timeline.paper.width).toEqual("100%");
+    it("sets the paper width to the width of the container", function() {
+      expect(resume_timeline.paper.width).toEqual(container.width());
     });
   });
 

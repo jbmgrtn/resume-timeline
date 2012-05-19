@@ -49,7 +49,10 @@
   };
 
   ResumeTimeline.prototype.createPaper = function(element) {
-    return Raphael(element, "100%", "100%");
+    var height = $(element).height();
+    var width = $(element).width();
+
+    return Raphael(element, height, width);
   };
 
   // A really lightweight plugin wrapper around the constructor,
