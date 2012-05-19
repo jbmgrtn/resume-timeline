@@ -88,26 +88,28 @@ describe("ResumeTimeline", function() {
       resume_timeline.createPaper();
     });
 
-    it("creates a horizontal line", function() {
-      spyOn(resume_timeline, "drawHorizontalLine");
-      resume_timeline.drawTimeline();
-      expect(resume_timeline.drawHorizontalLine).toHaveBeenCalled();
-    });
+    describe("draws a horizontal line", function() {
+      it("draws the line", function() {
+        spyOn(resume_timeline, "drawHorizontalLine");
+        resume_timeline.drawTimeline();
+        expect(resume_timeline.drawHorizontalLine).toHaveBeenCalled();
+      });
 
-    it("positions the line at 10,10", function() {
-      var spy = spyOn(resume_timeline, "drawHorizontalLine");
-      resume_timeline.drawTimeline();
-      expect(spy.mostRecentCall.args[0]).toEqual(10);
-      expect(spy.mostRecentCall.args[1]).toEqual(10);
-    });
+      it("positions the line at 10,10", function() {
+        var spy = spyOn(resume_timeline, "drawHorizontalLine");
+        resume_timeline.drawTimeline();
+        expect(spy.mostRecentCall.args[0]).toEqual(10);
+        expect(spy.mostRecentCall.args[1]).toEqual(10);
+      });
 
-    it("makes the line 20 smaller than the paper width", function() {
-      var width = container.width() - 20;
+      it("makes the line 20 smaller than the paper width", function() {
+        var width = container.width() - 20;
 
-      var spy = spyOn(resume_timeline, "drawHorizontalLine");
-      resume_timeline.drawTimeline();
-      expect(spy.mostRecentCall.args[2]).toEqual(width);
-    });
+        var spy = spyOn(resume_timeline, "drawHorizontalLine");
+        resume_timeline.drawTimeline();
+        expect(spy.mostRecentCall.args[2]).toEqual(width);
+      });
+    })
   });
 
   describe("drawHorizontalLine", function() {
