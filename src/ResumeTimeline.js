@@ -45,14 +45,18 @@
   };
 
   ResumeTimeline.prototype.draw = function() {
-    this.paper = this.createPaper(this.element);
+    this.createPaper();
+    this.drawTimeline();
   };
 
-  ResumeTimeline.prototype.createPaper = function(element) {
-    var height = $(element).height();
-    var width = $(element).width();
+  ResumeTimeline.prototype.createPaper = function() {
+    var container = $(this.element);
 
-    return Raphael(element, height, width);
+    var height = container.height();
+    var width = container.width();
+
+    this.paper = Raphael(this.element, height, width);
+
   };
 
   // A really lightweight plugin wrapper around the constructor,
