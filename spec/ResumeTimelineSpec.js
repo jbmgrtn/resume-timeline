@@ -81,9 +81,17 @@ describe("ResumeTimeline", function() {
 
   describe("drawTimeline", function() {
     var resume_timeline;
+    var x, y;
 
     beforeEach(function() {
-      container.resumeTimeline({ autoDraw: false});
+      x = 25;
+      y = 25;
+
+      container.resumeTimeline({
+        autoDraw:  false,
+        x: x,
+        y: y
+      });
       resume_timeline = container.data(plugin_name);
       resume_timeline.createPaper();
     });
@@ -95,21 +103,69 @@ describe("ResumeTimeline", function() {
         expect(resume_timeline.drawHorizontalLine).toHaveBeenCalled();
       });
 
-      it("positions the line at 10,10", function() {
+      it("positions the line at x, y specified in options", function() {
         var spy = spyOn(resume_timeline, "drawHorizontalLine");
         resume_timeline.drawTimeline();
-        expect(spy.mostRecentCall.args[0]).toEqual(10);
-        expect(spy.mostRecentCall.args[1]).toEqual(10);
+        expect(spy.mostRecentCall.args[0]).toEqual(x);
+        expect(spy.mostRecentCall.args[1]).toEqual(y);
       });
 
-      it("makes the line 20 smaller than the paper width", function() {
-        var width = container.width() - 20;
+      it("makes the smaller than the paper width based on x specified in options", function() {
+        var width = container.width() - x * 2;
 
         var spy = spyOn(resume_timeline, "drawHorizontalLine");
         resume_timeline.drawTimeline();
         expect(spy.mostRecentCall.args[2]).toEqual(width);
       });
-    })
+    });
+
+    it("draws the timeline points", function() {
+      spyOn(resume_timeline, "drawTimelinePoints");
+      resume_timeline.drawTimeline();
+      expect(resume_timeline.drawTimelinePoints).toHaveBeenCalled();
+    });
+  });
+
+  describe("drawTimelinePoints", function() {
+    var resume_timeline;
+    var startYear;
+    var endYear;
+
+    beforeEach(function() {
+      startYear = 2000;
+      endYear   = 2015;
+
+      container.resumeTimeline({
+        autoDraw:  false,
+        startYear: startYear,
+        endYear:   endYear
+      });
+      resume_timeline = container.data(plugin_name);
+      resume_timeline.createPaper();
+    });
+
+    it("draws a circle for each year", function() {
+      var count = endYear - startYear + 1;
+
+      var spy = spyOn(resume_timeline, "drawPoint");
+      resume_timeline.drawTimelinePoints();
+      expect(spy.callCount).toEqual(count);
+    });
+
+    it("gives the circle the specified width", function() {
+      var width = 10;
+
+      var spy = spyOn(resume_timeline, "drawPoint");
+      resume_timeline.drawTimelinePoints();
+      expect(spy.mostRecentCall.args[2]).toEqual(width);
+    });
+
+    it("gives the circle the specified stroke width", function() {
+      var stroke_width = 2;
+      var spy = spyOn(resume_timeline, "drawPoint");
+      resume_timeline.drawTimelinePoints();
+      expect(spy.mostRecentCall.args[3]).toEqual(stroke_width);
+    });
   });
 
   describe("drawHorizontalLine", function() {
@@ -142,6 +198,47 @@ describe("ResumeTimeline", function() {
       var spy = spyOn(resume_timeline.paper, "path")
       resume_timeline.drawHorizontalLine(x, 10, width);
       expect(spy.mostRecentCall.args[0]).toContain("H" + end_x);
+    });
+  });
+
+  describe("drawPoint", function() {
+    var resume_timeline;
+
+    beforeEach(function() {
+      container.resumeTimeline({ autoDraw: false});
+      resume_timeline = container.data(plugin_name);
+      resume_timeline.createPaper();
+    });
+
+    it("draws a path", function() {
+      spyOn(resume_timeline.paper, "circle")
+      resume_timeline.drawPoint();
+      expect(resume_timeline.paper.circle).toHaveBeenCalled();
+    });
+
+    it("draws the circle at the specified coordinates", function() {
+      var x = 10;
+      var y = 10;
+      var spy = spyOn(resume_timeline.paper, "circle");
+      resume_timeline.drawPoint(x, y);
+      expect(spy.mostRecentCall.args[0]).toBe(x);
+      expect(spy.mostRecentCall.args[1]).toBe(y);
+    });
+
+    it("draws the circle with the specified width, accounting for stroke", function() {
+      var stroke_width = 2;
+      var width = 20;
+      var radius = (width - stroke_width) / 2;
+      var spy = spyOn(resume_timeline.paper, "circle");
+      resume_timeline.drawPoint(10, 10, width, stroke_width);
+      expect(spy.mostRecentCall.args[2]).toBe(radius);
+    });
+
+    it("draws the circle with the specified stroke width", function() {
+      var stroke_width = 2;
+      var spy = spyOn(resume_timeline.paper, "circle");
+      resume_timeline.drawPoint(10, 10, 20, stroke_width);
+      expect(spy.mostRecentCall.args[3]).toBe(stroke_width);
     });
   });
 });
