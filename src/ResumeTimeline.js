@@ -65,7 +65,8 @@
   };
 
   ResumeTimeline.prototype.drawHorizontalLine = function(x, y, width) {
-    this.paper.path("M" + x + "," + y + "H" + width);
+    var end_x = x + width;
+    this.paper.path("M" + x + "," + y + "H" + end_x);
   };
 
   // A really lightweight plugin wrapper around the constructor,

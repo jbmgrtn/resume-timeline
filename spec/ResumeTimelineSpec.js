@@ -136,10 +136,12 @@ describe("ResumeTimeline", function() {
     });
 
     it("has the specified width", function() {
+      var x = 10;
       var width = 100;
+      var end_x = x + width;
       var spy = spyOn(resume_timeline.paper, "path")
-      resume_timeline.drawHorizontalLine(10, 10, width);
-      expect(spy.mostRecentCall.args[0]).toContain("H" + width);
+      resume_timeline.drawHorizontalLine(x, 10, width);
+      expect(spy.mostRecentCall.args[0]).toContain("H" + end_x);
     });
   });
 });
