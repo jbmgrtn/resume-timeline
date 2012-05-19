@@ -15,7 +15,7 @@
   var pluginName = 'resumeTimeline',
       document = window.document,
       defaults = {
-        propertyName: "value"
+        autoDraw: true
       };
 
   // The actual plugin constructor
@@ -39,6 +39,12 @@
     // You already have access to the DOM element and the options via the instance,
     // e.g., this.element and this.options
 
+    if(this.options["autoDraw"]) {
+      this.draw();
+    }
+  };
+
+  ResumeTimeline.prototype.draw = function() {
     this.paper = this.createPaper(this.element);
   };
 
