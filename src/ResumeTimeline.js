@@ -15,7 +15,11 @@
   var pluginName = 'resumeTimeline',
       document = window.document,
       defaults = {
-        autoDraw: true
+        autoDraw: true,
+        startYear: 2000,
+        endYear: 2015,
+        x: 30,
+        y: 30
       };
 
   // The actual plugin constructor
@@ -59,14 +63,36 @@
   };
 
   ResumeTimeline.prototype.drawTimeline = function() {
-    var padding = 10;
-    var width = $(this.element).width() - padding * 2;
-    this.drawHorizontalLine(padding, padding, width);
+    var origin_x = this.options["x"];
+    var origin_y = this.options["y"];
+    var width = $(this.element).width() - origin_x * 2;
+
+    this.drawHorizontalLine(origin_x, origin_y, width);
+    this.drawTimelinePoints(width);
+  };
+
+  ResumeTimeline.prototype.drawTimelinePoints = function(width) {
+    var origin_x = this.options["x"];
+    var origin_y = this.options["y"];
+    var circle_width = 10;
+    var circle_stroke_width = 2;
+    var point_count = this.options.endYear - this.options.startYear + 1;
+    var circle_padding = (width - circle_width * (point_count - 1)) / (point_count - 1);
+
+    for(var i=0; i < point_count; i++) {
+      var point_x = origin_x + (circle_width + circle_padding) * i;
+      this.drawPoint(point_x, origin_y, circle_width, circle_stroke_width);
+    }
   };
 
   ResumeTimeline.prototype.drawHorizontalLine = function(x, y, width) {
     var end_x = x + width;
     this.paper.path("M" + x + "," + y + "H" + end_x);
+  };
+
+  ResumeTimeline.prototype.drawPoint = function(x, y, width, stroke_width) {
+    var radius = (width - stroke_width) / 2;
+    var circle = this.paper.circle(x, y, radius, stroke_width);
   };
 
   // A really lightweight plugin wrapper around the constructor,
