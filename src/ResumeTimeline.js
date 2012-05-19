@@ -56,7 +56,16 @@
     var width = container.width();
 
     this.paper = Raphael(this.element, height, width);
+  };
 
+  ResumeTimeline.prototype.drawTimeline = function() {
+    var padding = 10;
+    var width = $(this.element).width() - padding * 2;
+    this.drawHorizontalLine(padding, padding, width);
+  };
+
+  ResumeTimeline.prototype.drawHorizontalLine = function(x, y, width) {
+    this.paper.path("M" + x + "," + y + "H" + width);
   };
 
   // A really lightweight plugin wrapper around the constructor,
