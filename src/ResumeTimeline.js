@@ -38,6 +38,12 @@
     // Place initialization logic here
     // You already have access to the DOM element and the options via the instance,
     // e.g., this.element and this.options
+
+    this.paper = this.createPaper(this.element);
+  };
+
+  ResumeTimeline.prototype.createPaper = function(element) {
+    return Raphael(element, "100%", "100%");
   };
 
   // A really lightweight plugin wrapper around the constructor,
