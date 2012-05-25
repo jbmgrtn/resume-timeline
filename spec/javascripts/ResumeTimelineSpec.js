@@ -157,14 +157,14 @@ describe("ResumeTimeline", function() {
 
       var spy = spyOn(resume_timeline, "drawPoint");
       resume_timeline.drawTimelinePoints();
-      expect(spy.mostRecentCall.args[2]).toEqual(width);
+      expect(spy.mostRecentCall.args[2]["width"]).toEqual(width);
     });
 
     it("gives the circle the specified stroke width", function() {
       var stroke_width = 2;
       var spy = spyOn(resume_timeline, "drawPoint");
       resume_timeline.drawTimelinePoints();
-      expect(spy.mostRecentCall.args[3]).toEqual(stroke_width);
+      expect(spy.mostRecentCall.args[2]["stroke-width"]).toEqual(stroke_width);
     });
   });
 
@@ -210,8 +210,8 @@ describe("ResumeTimeline", function() {
       resume_timeline.createPaper();
     });
 
-    it("draws a path", function() {
-      spyOn(resume_timeline.paper, "circle")
+    it("draws a circle", function() {
+      spyOn(resume_timeline.paper, "circle").andCallThrough();
       resume_timeline.drawPoint();
       expect(resume_timeline.paper.circle).toHaveBeenCalled();
     });
@@ -219,7 +219,7 @@ describe("ResumeTimeline", function() {
     it("draws the circle at the specified coordinates", function() {
       var x = 10;
       var y = 10;
-      var spy = spyOn(resume_timeline.paper, "circle");
+      var spy = spyOn(resume_timeline.paper, "circle").andCallThrough();
       resume_timeline.drawPoint(x, y);
       expect(spy.mostRecentCall.args[0]).toBe(x);
       expect(spy.mostRecentCall.args[1]).toBe(y);
@@ -229,16 +229,42 @@ describe("ResumeTimeline", function() {
       var stroke_width = 2;
       var width = 20;
       var radius = (width - stroke_width) / 2;
-      var spy = spyOn(resume_timeline.paper, "circle");
-      resume_timeline.drawPoint(10, 10, width, stroke_width);
+      var spy = spyOn(resume_timeline.paper, "circle").andCallThrough();
+      resume_timeline.drawPoint(10, 10, {
+        "width": width,
+        "stroke-width": stroke_width
+      });
       expect(spy.mostRecentCall.args[2]).toBe(radius);
     });
 
     it("draws the circle with the specified stroke width", function() {
       var stroke_width = 2;
-      var spy = spyOn(resume_timeline.paper, "circle");
-      resume_timeline.drawPoint(10, 10, 20, stroke_width);
-      expect(spy.mostRecentCall.args[3]).toBe(stroke_width);
+      var fake_circle = jasmine.createSpyObj("circle", ["attr"]);
+      var spy = spyOn(resume_timeline.paper, "circle").andReturn(fake_circle);
+      resume_timeline.drawPoint(10, 10, {
+        "stroke-width": stroke_width
+      });
+      expect(fake_circle.attr).toHaveBeenCalledWith("stroke-width", stroke_width);
+    });
+
+    it("draws the circle with the specified stroke color", function() {
+      var stroke_color = "#00CC00";
+      var fake_circle = jasmine.createSpyObj("circle", ["attr"]);
+      var spy = spyOn(resume_timeline.paper, "circle").andReturn(fake_circle);
+      resume_timeline.drawPoint(10, 10, {
+        "stroke-color": stroke_color
+      });
+      expect(fake_circle.attr).toHaveBeenCalledWith("stroke", stroke_color);
+    });
+
+    it("draws the circle with the specified fill color", function() {
+      var fill_color = "#00CC00";
+      var fake_circle = jasmine.createSpyObj("circle", ["attr"]);
+      var spy = spyOn(resume_timeline.paper, "circle").andReturn(fake_circle);
+      resume_timeline.drawPoint(10, 10, {
+        "fill-color": fill_color
+      });
+      expect(fake_circle.attr).toHaveBeenCalledWith("fill", fill_color);
     });
   });
 });

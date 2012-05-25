@@ -81,7 +81,10 @@
 
     for(var i=0; i < point_count; i++) {
       var point_x = origin_x + (circle_width + circle_padding) * i;
-      this.drawPoint(point_x, origin_y, circle_width, circle_stroke_width);
+      this.drawPoint(point_x, origin_y, {
+        width: circle_width,
+        "stroke-width": circle_stroke_width
+      });
     }
   };
 
@@ -90,9 +93,19 @@
     this.paper.path("M" + x + "," + y + "H" + end_x);
   };
 
-  ResumeTimeline.prototype.drawPoint = function(x, y, width, stroke_width) {
-    var radius = (width - stroke_width) / 2;
-    var circle = this.paper.circle(x, y, radius, stroke_width);
+  ResumeTimeline.prototype.drawPoint = function(x, y, options) {
+    var settings = $.extend({
+      width: 10,
+      "stroke-width": 1,
+      "stroke-color": "#000",
+      "fill-color": "#fff"
+    }, options);
+
+    var radius = (settings["width"] - settings["stroke-width"]) / 2;
+    var circle = this.paper.circle(x, y, radius);
+    circle.attr("fill", settings["fill-color"]);
+    circle.attr("stroke", settings["stroke-color"]);
+    circle.attr("stroke-width", settings["stroke-width"]);
   };
 
   // A really lightweight plugin wrapper around the constructor,
