@@ -1,6 +1,8 @@
 resume-timeline
 ===============
 
+[![Build Status](https://secure.travis-ci.org/juliepagano/resume-timeline.png?branch=master)](http://travis-ci.org/juliepagano/resume-timeline)
+
 Resume Timeline using jQuery and Raphaël
 
 # Notes
