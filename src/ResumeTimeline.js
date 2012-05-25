@@ -67,7 +67,9 @@
     var origin_y = this.options["y"];
     var width = $(this.element).width() - origin_x * 2;
 
-    this.drawHorizontalLine(origin_x, origin_y, width);
+    this.drawHorizontalLine(origin_x, origin_y, width, {
+      "stroke-width": 2
+    });
     this.drawTimelinePoints(width);
   };
 
@@ -88,14 +90,21 @@
     }
   };
 
-  ResumeTimeline.prototype.drawHorizontalLine = function(x, y, width) {
+  ResumeTimeline.prototype.drawHorizontalLine = function(x, y, width, options) {
+    var settings = $.extend({
+      "stroke-width": 1,
+      "stroke-color": "#000"
+    }, options);
+
     var end_x = x + width;
-    this.paper.path("M" + x + "," + y + "H" + end_x);
+    var line = this.paper.path("M" + x + "," + y + "H" + end_x);
+    line.attr("stroke", settings["stroke-color"]);
+    line.attr("stroke-width", settings["stroke-width"]);
   };
 
   ResumeTimeline.prototype.drawPoint = function(x, y, options) {
     var settings = $.extend({
-      width: 10,
+      "width": 10,
       "stroke-width": 1,
       "stroke-color": "#000",
       "fill-color": "#fff"
