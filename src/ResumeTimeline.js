@@ -69,10 +69,13 @@
     var origin_y = this.options["y"];
     var width = $(this.element).width() - origin_x * 2;
 
+    this.paper.setStart();
     this.drawHorizontalLine(origin_x, origin_y, width, {
       "stroke-width": 2
     });
     this.drawTimelinePoints(width);
+
+    this.timeline = this.paper.setFinish();
   };
 
   ResumeTimeline.prototype.drawTimelinePoints = function(width) {
