@@ -43,6 +43,10 @@
     // You already have access to the DOM element and the options via the instance,
     // e.g., this.element and this.options
 
+    var container = $(this.element);
+    this.height = container.height();
+    this.width = container.width();
+
     if(this.options["autoDraw"]) {
       this.draw();
     }
@@ -54,10 +58,8 @@
   };
 
   ResumeTimeline.prototype.createPaper = function() {
-    var container = $(this.element);
-
-    var height = container.height();
-    var width = container.width();
+    var height = this.height;
+    var width = this.width;
 
     this.paper = Raphael(this.element, height, width);
   };

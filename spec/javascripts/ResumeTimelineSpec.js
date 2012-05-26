@@ -33,6 +33,22 @@ describe("ResumeTimeline", function() {
       var resume_timeline = container.data(plugin_name);
       expect(resume_timeline.paper).toBeUndefined();
     });
+
+    it("sets the height to that of the container", function() {
+      var height = container.height();
+      container.resumeTimeline({autoDraw: false});
+      var resume_timeline = container.data(plugin_name);
+
+      expect(resume_timeline.height).toEqual(height);
+    });
+
+    it("sets the width to that of the container", function() {
+      var width = container.height();
+      container.resumeTimeline({autoDraw: false});
+      var resume_timeline = container.data(plugin_name);
+
+      expect(resume_timeline.width).toEqual(width);
+    });
   });
 
   describe("draw", function() {
