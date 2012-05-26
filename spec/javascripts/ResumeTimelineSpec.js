@@ -115,7 +115,7 @@ describe("ResumeTimeline", function() {
       var sections = [{}, {}];
       resume_timeline.options = {
         "sections": sections
-      }
+      };
       var spy = spyOn(resume_timeline, "drawSection");
       resume_timeline.drawSections();
 
@@ -370,7 +370,7 @@ describe("ResumeTimeline", function() {
 
       var spy = spyOn(resume_timeline, "drawPoint");
       resume_timeline.drawTimelinePoints();
-      expect(spy.mostRecentCall.args[2]["width"]).toEqual(width);
+      expect(spy.mostRecentCall.args[2].width).toEqual(width);
     });
 
     it("gives the circle the specified stroke width", function() {
@@ -419,7 +419,7 @@ describe("ResumeTimeline", function() {
       var spy = spyOn(resume_timeline.paper, "path").andReturn(fake_path);
       resume_timeline.drawHorizontalLine(10, 10, 10, {
         "stroke-width": stroke_width
-      })
+      });
       expect(fake_path.attr).toHaveBeenCalledWith("stroke-width", stroke_width);
     });
 
@@ -429,7 +429,7 @@ describe("ResumeTimeline", function() {
       var spy = spyOn(resume_timeline.paper, "path").andReturn(fake_path);
       resume_timeline.drawHorizontalLine(10, 10, 10, {
         "stroke-color": stroke_color
-      })
+      });
       expect(fake_path.attr).toHaveBeenCalledWith("stroke", stroke_color  );
     });
   });
