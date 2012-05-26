@@ -19,7 +19,21 @@
         startYear: 2000,
         endYear: 2015,
         x: 30,
-        y: 30
+        y: 30,
+        sections: [
+          {
+            "label": "Work Experience",
+            "fill-color": "#0071BC"
+          },
+          {
+            "label": "Education",
+            "fill-color": "#009245"
+          },
+          {
+            "label": "Activities",
+            "fill-color": "#C1272D"
+          }
+        ]
       };
 
   // The actual plugin constructor
@@ -55,6 +69,7 @@
   ResumeTimeline.prototype.draw = function() {
     this.createPaper();
     this.drawTimeline();
+    this.drawSections();
   };
 
   ResumeTimeline.prototype.createPaper = function() {
@@ -64,23 +79,53 @@
     this.paper = Raphael(this.element, height, width);
   };
 
+  ResumeTimeline.prototype.drawSections = function() {
+    var section_x = 0;
+    var section_y = this.timeline.getBBox().y + this.timeline.getBBox().y2;
+    var section_height = (this.height - section_y) / this.options["sections"].length;
+
+    for(var i=0; i < this.options["sections"].length; i++) {
+      this.drawSection(
+        section_x,
+        section_y,
+        section_height,
+        this.options["sections"][i]
+      );
+      section_y += section_height;
+    }
+  };
+
+  ResumeTimeline.prototype.drawSection = function(x, y, height, options) {
+    var fill_color = options["fill-color"] || null;
+
+    this.drawBox(x, y, this.width, height, {
+      "fill-color": fill_color,
+      "fill-opacity": 0.2
+    });
+
+    this.drawBox(x, y, 30, height, {
+      "fill-color": fill_color,
+      "fill-opacity": 1
+    });
+  };
+
   ResumeTimeline.prototype.drawTimeline = function() {
-    var origin_x = this.options["x"];
+    var origin_x = this.options["x"] + 30;
     var origin_y = this.options["y"];
-    var width = $(this.element).width() - origin_x * 2;
+    var width = $(this.element).width() - origin_x - 30;
 
     this.paper.setStart();
     this.drawHorizontalLine(origin_x, origin_y, width, {
       "stroke-width": 2
     });
-    this.drawTimelinePoints(width);
+    this.drawTimelinePoints(origin_x, origin_y, width);
 
     this.timeline = this.paper.setFinish();
   };
 
-  ResumeTimeline.prototype.drawTimelinePoints = function(width) {
-    var origin_x = this.options["x"];
-    var origin_y = this.options["y"];
+  ResumeTimeline.prototype.drawTimelinePoints = function(x, y, width) {
+    var origin_x = x;
+    var origin_y = y;
     var circle_width = 10;
     var circle_stroke_width = 2;
     var point_count = this.options.endYear - this.options.startYear + 1;
@@ -93,6 +138,24 @@
         "stroke-width": circle_stroke_width
       });
     }
+  };
+
+  ResumeTimeline.prototype.drawBox = function(x, y, width, height, options) {
+    var settings = $.extend({
+      "stroke-width": "none",
+      "stroke-color": "#000",
+      "stroke-opacity": 0,
+      "fill-color": "#fff",
+      "fill-opacity": 1
+    }, options);
+
+    var rect = this.paper.rect(x, y, width, height);
+
+    rect.attr("fill", settings["fill-color"]);
+    rect.attr("fill-opacity", settings["fill-opacity"]);
+    rect.attr("stroke", settings["stroke-color"]);
+    rect.attr("stroke-width", settings["stroke-width"]);
+    rect.attr("stroke-opacity", settings["stroke-opacity"]);
   };
 
   ResumeTimeline.prototype.drawHorizontalLine = function(x, y, width, options) {

@@ -61,6 +61,7 @@ describe("ResumeTimeline", function() {
 
     it("creates paper for drawing", function() {
       spyOn(resume_timeline, "drawTimeline");
+      spyOn(resume_timeline, "drawSections");
       spyOn(resume_timeline, "createPaper");
       resume_timeline.draw();
       expect(resume_timeline.createPaper).toHaveBeenCalled();
@@ -73,8 +74,15 @@ describe("ResumeTimeline", function() {
 
     it("draws the timeline", function() {
       spyOn(resume_timeline, "drawTimeline");
+      spyOn(resume_timeline, "drawSections");
       resume_timeline.draw();
       expect(resume_timeline.drawTimeline).toHaveBeenCalled();
+    });
+
+    it("draws the sections", function() {
+      spyOn(resume_timeline, "drawSections");
+      resume_timeline.draw();
+      expect(resume_timeline.drawSections).toHaveBeenCalled();
     });
   });
 
@@ -92,6 +100,189 @@ describe("ResumeTimeline", function() {
 
     it("sets the paper width to the width of the container", function() {
       expect(resume_timeline.paper.width).toEqual(container.width());
+    });
+  });
+
+  describe("drawSections", function() {
+    var resume_timeline;
+
+    beforeEach(function() {
+      container.resumeTimeline();
+      resume_timeline = container.data(plugin_name);
+    });
+
+    it("draws each section", function() {
+      var sections = [{}, {}];
+      resume_timeline.options = {
+        "sections": sections
+      }
+      var spy = spyOn(resume_timeline, "drawSection");
+      resume_timeline.drawSections();
+
+      expect(resume_timeline.drawSection).toHaveBeenCalled();
+      expect(spy.callCount).toEqual(sections.length);
+    });
+  });
+
+  describe("drawSection", function() {
+    var resume_timeline;
+
+    beforeEach(function() {
+      container.resumeTimeline();
+      resume_timeline = container.data(plugin_name);
+      resume_timeline.createPaper();
+    });
+
+    describe("draws a content box", function() {
+      it("draws the box", function() {
+        spyOn(resume_timeline.paper, "rect").andCallThrough();
+        resume_timeline.drawSection(10, 10, 10, {});
+        expect(resume_timeline.paper.rect).toHaveBeenCalled();
+      });
+
+      it("draws the box with the specified dimensions", function() {
+        var x = 30;
+        var y = 40;
+        var spy = spyOn(resume_timeline.paper, "rect").andCallThrough();
+        resume_timeline.drawSection(x, y, 10, {});
+        expect(spy.calls[0].args[0]).toEqual(x);
+        expect(spy.calls[0].args[1]).toEqual(y);
+      });
+
+      it("draws the box with the width of the timeline", function() {
+        var width = 30;
+        resume_timeline.width = width;
+        var spy = spyOn(resume_timeline.paper, "rect").andCallThrough();
+        resume_timeline.drawSection(10, 10, 10, {});
+        expect(spy.calls[0].args[2]).toEqual(width);
+      });
+
+      it("draws the box with the specified height", function() {
+        var height = 30;
+        var spy = spyOn(resume_timeline.paper, "rect").andCallThrough();
+        resume_timeline.drawSection(10, 10, height, {});
+        expect(spy.calls[0].args[3]).toEqual(height);
+      });
+    });
+
+    describe("draws a title box", function() {
+      it("draws the box", function() {
+        spyOn(resume_timeline.paper, "rect").andCallThrough();
+        resume_timeline.drawSection(10, 10, 10, {});
+        expect(resume_timeline.paper.rect).toHaveBeenCalled();
+      });
+
+      it("draws the box with the specified dimensions", function() {
+        var x = 30;
+        var y = 40;
+        var spy = spyOn(resume_timeline.paper, "rect").andCallThrough();
+        resume_timeline.drawSection(x, y, 10, {});
+        expect(spy.calls[1].args[0]).toEqual(x);
+        expect(spy.calls[1].args[1]).toEqual(y);
+      });
+
+      it("draws the box with the correct width", function() {
+        var width = 30;
+        var spy = spyOn(resume_timeline.paper, "rect").andCallThrough();
+        resume_timeline.drawSection(10, 10, 10, {});
+        expect(spy.calls[1].args[2]).toEqual(width);
+      });
+
+      it("draws the box with the specified height", function() {
+        var height = 30;
+        var spy = spyOn(resume_timeline.paper, "rect").andCallThrough();
+        resume_timeline.drawSection(10, 10, height, {});
+        expect(spy.calls[0].args[3]).toEqual(height);
+      });
+    });
+  });
+
+  describe("drawBox", function() {
+    var resume_timeline;
+
+    beforeEach(function() {
+      container.resumeTimeline({ autoDraw: false});
+      resume_timeline = container.data(plugin_name);
+      resume_timeline.createPaper();
+    });
+
+    it("draws a rectangle", function() {
+      spyOn(resume_timeline.paper, "rect").andCallThrough();
+      resume_timeline.drawBox();
+      expect(resume_timeline.paper.rect).toHaveBeenCalled();
+    });
+
+    it("draws the rectangle with the specified coordinates", function() {
+      var x = 20;
+      var y = 30;
+      var spy = spyOn(resume_timeline.paper, "rect").andCallThrough();
+      resume_timeline.drawBox(x, y, 10, 10);
+      expect(spy.mostRecentCall.args[0]).toBe(x);
+      expect(spy.mostRecentCall.args[1]).toBe(y);
+    });
+
+    it("draws the rectangle with the specified width", function() {
+      var width = 20;
+      var spy = spyOn(resume_timeline.paper, "rect").andCallThrough();
+      resume_timeline.drawBox(10, 10, width, 10);
+      expect(spy.mostRecentCall.args[2]).toBe(width);
+    });
+
+    it("draws the rectangle with the specified height", function() {
+      var height = 20;
+      var spy = spyOn(resume_timeline.paper, "rect").andCallThrough();
+      resume_timeline.drawBox(10, 10, 10, height);
+      expect(spy.mostRecentCall.args[3]).toBe(height);
+    });
+
+    it("draws the rectangle with the specified stroke width", function() {
+      var stroke_width = 2;
+      var fake_rect = jasmine.createSpyObj("rect", ["attr"]);
+      var spy = spyOn(resume_timeline.paper, "rect").andReturn(fake_rect);
+      resume_timeline.drawBox(10, 10, 10, 10, {
+        "stroke-width": stroke_width
+      });
+      expect(fake_rect.attr).toHaveBeenCalledWith("stroke-width", stroke_width);
+    });
+
+    it("draws the rectangle with the specified stroke color", function() {
+      var stroke_color = "#00CC00";
+      var fake_rect = jasmine.createSpyObj("rect", ["attr"]);
+      var spy = spyOn(resume_timeline.paper, "rect").andReturn(fake_rect);
+      resume_timeline.drawBox(10, 10, 10, 10, {
+        "stroke-color": stroke_color
+      });
+      expect(fake_rect.attr).toHaveBeenCalledWith("stroke", stroke_color);
+    });
+
+    it("draws the rectangle with the specified stroke opacity", function() {
+      var stroke_opacity = "#00CC00";
+      var fake_rect = jasmine.createSpyObj("rect", ["attr"]);
+      var spy = spyOn(resume_timeline.paper, "rect").andReturn(fake_rect);
+      resume_timeline.drawBox(10, 10, 10, 10, {
+        "stroke-opacity": stroke_opacity
+      });
+      expect(fake_rect.attr).toHaveBeenCalledWith("stroke-opacity", stroke_opacity);
+    });
+
+    it("draws the rectangle with the specified fill color", function() {
+      var fill_color = "#00CC00";
+      var fake_rect = jasmine.createSpyObj("rect", ["attr"]);
+      var spy = spyOn(resume_timeline.paper, "rect").andReturn(fake_rect);
+      resume_timeline.drawBox(10, 10, 10, 10, {
+        "fill-color": fill_color
+      });
+      expect(fake_rect.attr).toHaveBeenCalledWith("fill", fill_color);
+    });
+
+    it("draws the rectangle with the specified fill opacity", function() {
+      var fill_opacity = "#00CC00";
+      var fake_rect = jasmine.createSpyObj("rect", ["attr"]);
+      var spy = spyOn(resume_timeline.paper, "rect").andReturn(fake_rect);
+      resume_timeline.drawBox(10, 10, 10, 10, {
+        "fill-opacity": fill_opacity
+      });
+      expect(fake_rect.attr).toHaveBeenCalledWith("fill-opacity", fill_opacity);
     });
   });
 
@@ -138,21 +329,6 @@ describe("ResumeTimeline", function() {
         spyOn(resume_timeline, "drawHorizontalLine");
         resume_timeline.drawTimeline();
         expect(resume_timeline.drawHorizontalLine).toHaveBeenCalled();
-      });
-
-      it("positions the line at x, y specified in options", function() {
-        var spy = spyOn(resume_timeline, "drawHorizontalLine");
-        resume_timeline.drawTimeline();
-        expect(spy.mostRecentCall.args[0]).toEqual(x);
-        expect(spy.mostRecentCall.args[1]).toEqual(y);
-      });
-
-      it("makes the smaller than the paper width based on x specified in options", function() {
-        var width = container.width() - x * 2;
-
-        var spy = spyOn(resume_timeline, "drawHorizontalLine");
-        resume_timeline.drawTimeline();
-        expect(spy.mostRecentCall.args[2]).toEqual(width);
       });
     });
 
