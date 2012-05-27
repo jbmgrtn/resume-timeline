@@ -137,12 +137,17 @@
     var point_count = this.options.endYear - this.options.startYear + 1;
     var circle_padding = (width - circle_width * (point_count - 1)) / (point_count - 1);
 
+    var current_year = this.options.startYear;
+
     for(var i=0; i < point_count; i++) {
       var point_x = origin_x + (circle_width + circle_padding) * i;
       this.drawPoint(point_x, origin_y, {
         width: circle_width,
-        "stroke-width": circle_stroke_width
+        "stroke-width": circle_stroke_width,
+        "label": current_year
       });
+
+      current_year += 1;
     }
   };
 
@@ -197,7 +202,8 @@
       "width": 10,
       "stroke-width": 1,
       "stroke-color": "#000",
-      "fill-color": "#fff"
+      "fill-color": "#fff",
+      "label": null
     }, options);
 
     var radius = (settings["width"] - settings["stroke-width"]) / 2;
@@ -205,6 +211,13 @@
     circle.attr("fill", settings["fill-color"]);
     circle.attr("stroke", settings["stroke-color"]);
     circle.attr("stroke-width", settings["stroke-width"]);
+
+    if(settings.label) {
+      var font_size = 12;
+      this.drawText(x, y  - font_size, settings.label, {
+        "font-size": font_size
+      });
+    }
   };
 
   // A really lightweight plugin wrapper around the constructor,

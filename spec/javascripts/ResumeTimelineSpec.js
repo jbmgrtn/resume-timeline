@@ -589,6 +589,53 @@ describe("ResumeTimeline", function() {
       });
       expect(fake_circle.attr).toHaveBeenCalledWith("fill", fill_color);
     });
+
+    describe("when label is specified", function() {
+      it("draws text", function() {
+        spyOn(resume_timeline, "drawText");
+        resume_timeline.drawPoint(10, 10, {
+          "label": "label"
+        });
+        expect(resume_timeline.drawText).toHaveBeenCalled();
+      });
+
+      it("draws text at the specified x coordinate", function() {
+        var x = 20;
+        var spy = spyOn(resume_timeline, "drawText");
+        resume_timeline.drawPoint(x, 10, {
+          "label": "label"
+        });
+        expect(spy.mostRecentCall.args[0]).toBe(x);
+      });
+
+      it("draws text with the label", function() {
+        var label = "a label";
+        var spy = spyOn(resume_timeline, "drawText");
+        resume_timeline.drawPoint(10, 10, {
+          "label": label
+        });
+        expect(spy.mostRecentCall.args[2]).toBe(label);
+      });
+
+      it("draws text above the point", function() {
+        var font_size = 12;
+        var y = 20;
+        var spy = spyOn(resume_timeline, "drawText");
+        resume_timeline.drawPoint(10, y, {
+          "label": "label"
+        });
+        expect(spy.mostRecentCall.args[1]).toBe(y - font_size);
+      });
+
+      it("draws text with 12px font size", function() {
+        var font_size = 12;
+        var spy = spyOn(resume_timeline, "drawText");
+        resume_timeline.drawPoint(10, 10, {
+          "label": "label"
+        });
+        expect(spy.mostRecentCall.args[3]["font-size"]).toBe(font_size);
+      });
+    });
   });
 });
 
