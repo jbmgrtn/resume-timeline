@@ -23,15 +23,41 @@
         sections: [
           {
             "label": "Work Experience",
-            "fill-color": "#0071BC"
+            "fill-color": "#0071BC",
+            "entries": [
+              {
+                "start-date": new Date("January 2, 2005"),
+                "end-date": new Date("January 2007")
+              },
+              {
+                "start-date": new Date("January 2001"),
+                "end-date": new Date("October 2003")
+              },
+              {
+                "start-date": new Date("May 2000"),
+                "end-date": new Date("August 1")
+              }
+            ]
           },
           {
             "label": "Education",
-            "fill-color": "#009245"
+            "fill-color": "#009245",
+            "entries": [
+              {
+                "start-date": new Date("March 2001"),
+                "end-date": new Date("October 2003")
+              }
+            ]
           },
           {
             "label": "Activities",
-            "fill-color": "#C1272D"
+            "fill-color": "#C1272D",
+            "entries": [
+              {
+                "start-date": new Date("January 2001"),
+                "end-date": new Date("October 2003")
+              }
+            ]
           }
         ]
       };
@@ -68,7 +94,9 @@
 
   ResumeTimeline.prototype.draw = function() {
     this.createPaper();
-    this.drawTimeline();
+    this.drawTimeline(0, 0, {
+      "display-labels": true
+    });
     this.drawSections();
   };
 
@@ -113,23 +141,87 @@
       "fill-color": "#fff",
       "font-size": 20
     });
+
+    this.drawEntries(x, y, options.entries, {
+      "stroke-color": options["fill-color"]
+    });
   };
 
-  ResumeTimeline.prototype.drawTimeline = function() {
-    var origin_x = this.options["x"] + 30;
-    var origin_y = this.options["y"];
-    var width = $(this.element).width() - origin_x - 30;
+  ResumeTimeline.prototype.drawEntries = function(x, y, entries, options) {
+    var settings = $.extend({
+    }, options);
+
+    var entry_x = x;
+    var entry_y = y;
+    for(var i=0; i < entries.length; i++) {
+      this.drawEntry(entry_x, entry_y, entries[i], {
+        "stroke-color": settings["stroke-color"]
+      });
+      entry_y += 40;
+    }
+  };
+
+  ResumeTimeline.prototype.drawEntry = function(x, y, entry, options) {
+    var settings = $.extend({
+      "stroke-color": "#000",
+      "fill-color": "#fff",
+      "start-date": entry["start-date"],
+      "end-date": entry["end-date"]
+    }, options);
+
+    this.drawTimeline(x, y, settings);
+  };
+
+  ResumeTimeline.prototype.drawTimeline = function(start_x, start_y, options) {
+    var settings = $.extend({
+      "fill-color": "#fff",
+      "stroke-color": "#000",
+      "display-labels": false
+    }, options);
+
+    var padding = 30;
+
+    var origin_x = start_x + this.options["x"] + padding;
+    var origin_y = start_y + this.options["y"];
+    var width = $(this.element).width() - origin_x - padding;
+
+    var start_date = new Date(this.options.startYear, 0, 1);
+    var end_date = new Date(this.options.endYear, 0, 1);
+    var origin_time_diff = end_date - start_date;
+
+    var line_x = origin_x;
+    var line_width = width;
+    if(settings["start-date"] && settings["end-date"]) {
+      var time_diff = settings["end-date"] - settings["start-date"];
+      var start_diff = settings["start-date"] - start_date;
+      line_x += width * start_diff / origin_time_diff;
+      line_width = line_width * time_diff / origin_time_diff;
+    }
 
     this.paper.setStart();
-    this.drawHorizontalLine(origin_x, origin_y, width, {
-      "stroke-width": 2
+    this.drawHorizontalLine(line_x, origin_y, line_width, {
+      "stroke-width": 2,
+      "stroke-color": settings["stroke-color"]
     });
-    this.drawTimelinePoints(origin_x, origin_y, width);
+
+    this.drawTimelinePoints(origin_x, origin_y, width, {
+      "stroke-color": settings["stroke-color"],
+      "fill-color": settings["fill-color"],
+      "display-labels": settings["display-labels"],
+      "start-date": settings["start-date"],
+      "end-date": settings["end-date"]
+    });
 
     this.timeline = this.paper.setFinish();
   };
 
-  ResumeTimeline.prototype.drawTimelinePoints = function(x, y, width) {
+  ResumeTimeline.prototype.drawTimelinePoints = function(x, y, width, options) {
+    var settings = $.extend({
+      "fill-color": "#fff",
+      "stroke-color": "#000",
+      "display-labels": false
+    }, options);
+
     var origin_x = x;
     var origin_y = y;
     var circle_width = 10;
@@ -139,13 +231,24 @@
 
     var current_year = this.options.startYear;
 
+    var start_date = settings["start-date"] || new Date(this.options.startYear, 0, 1);
+    var end_date = settings["end-date"] || new Date(this.options.endYear, 0, 1);
+
     for(var i=0; i < point_count; i++) {
       var point_x = origin_x + (circle_width + circle_padding) * i;
-      this.drawPoint(point_x, origin_y, {
-        width: circle_width,
-        "stroke-width": circle_stroke_width,
-        "label": current_year
-      });
+      var label = settings["display-labels"] ? current_year : null;
+
+      var current_year_date = new Date(current_year, 0, 1);
+
+      if(current_year_date >= start_date && current_year_date <= end_date) {
+        this.drawPoint(point_x, origin_y, {
+          width: circle_width,
+          "stroke-width": circle_stroke_width,
+          "stroke-color": settings["stroke-color"],
+          "fill-color": settings["fill-color"],
+          "label": label
+        });
+      }
 
       current_year += 1;
     }
@@ -234,6 +337,6 @@
         plugin_data;
       }
     });
-  }
+  };
 
 }(jQuery, window));

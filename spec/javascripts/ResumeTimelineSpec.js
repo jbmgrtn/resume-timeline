@@ -134,6 +134,10 @@ describe("ResumeTimeline", function() {
     });
 
     describe("draws a content box", function() {
+      beforeEach(function() {
+        spyOn(resume_timeline, "drawEntries");
+      });
+
       it("draws the box", function() {
         spyOn(resume_timeline.paper, "rect").andCallThrough();
         resume_timeline.drawSection(10, 10, 10, {});
@@ -166,6 +170,10 @@ describe("ResumeTimeline", function() {
     });
 
     describe("draws a title box", function() {
+      beforeEach(function() {
+        spyOn(resume_timeline, "drawEntries");
+      });
+
       it("draws the box", function() {
         spyOn(resume_timeline.paper, "rect").andCallThrough();
         resume_timeline.drawSection(10, 10, 10, {});
@@ -197,6 +205,10 @@ describe("ResumeTimeline", function() {
     });
 
     describe("draws the title", function() {
+      beforeEach(function() {
+        spyOn(resume_timeline, "drawEntries");
+      });
+
       it("draws the title", function() {
         var spy = spyOn(resume_timeline, "drawText");
         resume_timeline.drawSection(10, 10, 10, {});
@@ -222,6 +234,61 @@ describe("ResumeTimeline", function() {
         expect(spy.mostRecentCall.args[0]).toBe(30 / 2);
         expect(spy.mostRecentCall.args[1]).toBe(y + height / 2);
       });
+    });
+
+    it("draws the entries", function() {
+      spyOn(resume_timeline, "drawEntries");
+      resume_timeline.drawSection(10, 10, 10, {
+        "entries": [
+          {},
+          {}
+        ]
+      });
+      expect(resume_timeline.drawEntries).toHaveBeenCalled();
+    });
+  });
+
+  describe("drawEntries", function() {
+    var resume_timeline;
+
+    beforeEach(function() {
+      container.resumeTimeline({ autoDraw: false});
+      resume_timeline = container.data(plugin_name);
+      resume_timeline.createPaper();
+    });
+
+    it("draws each entry", function() {
+      var entries = [
+        {}, {}, {}
+      ];
+      var spy = spyOn(resume_timeline, "drawEntry");
+      resume_timeline.drawEntries(0, 0, entries, {});
+      expect(spy.callCount).toBe(entries.length);
+    });
+  });
+
+  describe("drawEntry", function() {
+    var resume_timeline;
+
+    beforeEach(function() {
+      container.resumeTimeline({ autoDraw: false});
+      resume_timeline = container.data(plugin_name);
+      resume_timeline.createPaper();
+    });
+
+    it("draws the timeline", function() {
+      spyOn(resume_timeline, "drawTimeline");
+      resume_timeline.drawEntry(0, 0, {}, {});
+      expect(resume_timeline.drawTimeline).toHaveBeenCalled();
+    });
+
+    it("draws the timeline at the specified coordinates", function() {
+      var x = 5;
+      var y = 5;
+      var spy = spyOn(resume_timeline, "drawTimeline");
+      resume_timeline.drawEntry(x, y, {}, {});
+      expect(spy.mostRecentCall.args[0]).toBe(x);
+      expect(spy.mostRecentCall.args[0]).toBe(y);
     });
   });
 
@@ -468,6 +535,34 @@ describe("ResumeTimeline", function() {
       var spy = spyOn(resume_timeline, "drawPoint");
       resume_timeline.drawTimelinePoints();
       expect(spy.mostRecentCall.args[2]["stroke-width"]).toEqual(stroke_width);
+    });
+
+    describe("when start date setting is specified", function() {
+      it("only draws points for dates >= the start date", function() {
+        var spy = spyOn(resume_timeline, "drawPoint");
+        var start_date = new Date("February 7, 2010");
+        var count = endYear - start_date.getFullYear();
+
+        resume_timeline.drawTimelinePoints(0, 0, 10, {
+          "start-date": start_date
+        });
+
+        expect(spy.callCount).toEqual(count);
+      });
+    });
+
+    describe("when end date setting is specified", function() {
+      it("only draws points for dates <= the start date", function() {
+        var spy = spyOn(resume_timeline, "drawPoint");
+        var end_date = new Date("February 7, 2010");
+        var count = end_date.getFullYear() - startYear + 1;
+
+        resume_timeline.drawTimelinePoints(0, 0, 10, {
+          "end-date": end_date
+        });
+
+        expect(spy.callCount).toEqual(count);
+      });
     });
   });
 
