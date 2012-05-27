@@ -107,6 +107,12 @@
       "fill-color": fill_color,
       "fill-opacity": 1
     });
+
+    this.drawText(30 / 2, y + height / 2, options.label, {
+      rotation: -90,
+      "fill-color": "#fff",
+      "font-size": 20
+    });
   };
 
   ResumeTimeline.prototype.drawTimeline = function() {
@@ -137,6 +143,22 @@
         width: circle_width,
         "stroke-width": circle_stroke_width
       });
+    }
+  };
+
+  ResumeTimeline.prototype.drawText = function(x, y, label, options) {
+    var settings = $.extend({
+      "rotation": null,
+      "fill-color": "#000",
+      "font-size": 12
+    }, options);
+
+    var text = this.paper.text(x, y, label);
+    text.attr("fill", settings["fill-color"]);
+    text.attr("font-size", settings["font-size"]);
+
+    if(settings.rotation) {
+      text.rotate(settings.rotation);
     }
   };
 

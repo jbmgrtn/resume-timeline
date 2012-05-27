@@ -195,6 +195,96 @@ describe("ResumeTimeline", function() {
         expect(spy.calls[0].args[3]).toEqual(height);
       });
     });
+
+    describe("draws the title", function() {
+      it("draws the title", function() {
+        var spy = spyOn(resume_timeline, "drawText");
+        resume_timeline.drawSection(10, 10, 10, {});
+        expect(resume_timeline.drawText).toHaveBeenCalled();
+      });
+
+      it("draws the title with the specified label", function() {
+        var label = "the label";
+        var spy = spyOn(resume_timeline, "drawText");
+        resume_timeline.drawSection(10, 10, 10, {
+          label: label
+        });
+        expect(spy.mostRecentCall.args[2]).toBe(label);
+      });
+
+      it("positions the title in the middle of the title box", function() {
+        var y = 40;
+        var height = 25;
+        var spy = spyOn(resume_timeline, "drawText");
+        resume_timeline.drawSection(10, y, height, {
+          label: "test"
+        });
+        expect(spy.mostRecentCall.args[0]).toBe(30 / 2);
+        expect(spy.mostRecentCall.args[1]).toBe(y + height / 2);
+      });
+    });
+  });
+
+  describe("drawText", function() {
+    var resume_timeline;
+
+    beforeEach(function() {
+      container.resumeTimeline({ autoDraw: false});
+      resume_timeline = container.data(plugin_name);
+      resume_timeline.createPaper();
+    });
+
+    it("draws text", function() {
+      spyOn(resume_timeline.paper, "text").andCallThrough();
+      resume_timeline.drawText();
+      expect(resume_timeline.paper.text).toHaveBeenCalled();
+    });
+
+    it("draws text at the specified coordinates", function() {
+      var x = 10;
+      var y = 20;
+      var spy = spyOn(resume_timeline.paper, "text").andCallThrough();
+      resume_timeline.drawText(x, y, "label");
+      expect(spy.mostRecentCall.args[0]).toBe(x);
+      expect(spy.mostRecentCall.args[1]).toBe(y);
+    });
+
+    it("draws text with the specified text", function() {
+      var text = "text value";
+      var spy = spyOn(resume_timeline.paper, "text").andCallThrough();
+      resume_timeline.drawText(10, 10, text);
+      expect(spy.mostRecentCall.args[2]).toBe(text);
+    });
+
+    it("draws the text with the specified fill", function() {
+      var fill_color = "#00CC00";
+      var fake_text = jasmine.createSpyObj("text", ["attr"]);
+      var spy = spyOn(resume_timeline.paper, "text").andReturn(fake_text);
+      resume_timeline.drawText(10, 10, "text", {
+        "fill-color": fill_color
+      });
+      expect(fake_text.attr).toHaveBeenCalledWith("fill", fill_color);
+    });
+
+    it("draws the text with the specified font-size", function() {
+      var font_size = 20;
+      var fake_text = jasmine.createSpyObj("text", ["attr"]);
+      var spy = spyOn(resume_timeline.paper, "text").andReturn(fake_text);
+      resume_timeline.drawText(10, 10, "text", {
+        "font-size": font_size
+      });
+      expect(fake_text.attr).toHaveBeenCalledWith("font-size", font_size);
+    });
+
+    it("rotates the text with the specified rotation", function() {
+      var rotation = 45;
+      var fake_text = jasmine.createSpyObj("text", ["attr", "rotate"]);
+      var spy = spyOn(resume_timeline.paper, "text").andReturn(fake_text);
+      resume_timeline.drawText(10, 10, "text", {
+        "rotation": rotation
+      });
+      expect(fake_text.rotate).toHaveBeenCalledWith(rotation);
+    });
   });
 
   describe("drawBox", function() {
