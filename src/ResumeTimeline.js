@@ -321,6 +321,8 @@
         "font-size": font_size
       });
     }
+
+    return circle;
   };
 
   // A really lightweight plugin wrapper around the constructor,

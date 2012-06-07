@@ -628,6 +628,11 @@ describe("ResumeTimeline", function() {
       resume_timeline.createPaper();
     });
 
+    it("returns a circle", function() {
+      var circle = resume_timeline.drawPoint();
+      expect(circle.type).toEqual("circle");
+    });
+
     it("draws a circle", function() {
       spyOn(resume_timeline.paper, "circle").andCallThrough();
       resume_timeline.drawPoint();
@@ -648,7 +653,7 @@ describe("ResumeTimeline", function() {
       var width = 20;
       var radius = (width - stroke_width) / 2;
       var spy = spyOn(resume_timeline.paper, "circle").andCallThrough();
-      resume_timeline.drawPoint(10, 10, {
+      var circle = resume_timeline.drawPoint(10, 10, {
         "width": width,
         "stroke-width": stroke_width
       });
@@ -657,32 +662,30 @@ describe("ResumeTimeline", function() {
 
     it("draws the circle with the specified stroke width", function() {
       var stroke_width = 2;
-      var fake_circle = jasmine.createSpyObj("circle", ["attr"]);
-      var spy = spyOn(resume_timeline.paper, "circle").andReturn(fake_circle);
-      resume_timeline.drawPoint(10, 10, {
+      var circle = resume_timeline.drawPoint(10, 10, {
         "stroke-width": stroke_width
       });
-      expect(fake_circle.attr).toHaveBeenCalledWith("stroke-width", stroke_width);
+
+      expect(circle.attr("stroke-width")).toBe(stroke_width);
     });
 
     it("draws the circle with the specified stroke color", function() {
       var stroke_color = "#00CC00";
-      var fake_circle = jasmine.createSpyObj("circle", ["attr"]);
-      var spy = spyOn(resume_timeline.paper, "circle").andReturn(fake_circle);
-      resume_timeline.drawPoint(10, 10, {
+
+      var stroke_width = 2;
+      var circle = resume_timeline.drawPoint(10, 10, {
         "stroke-color": stroke_color
       });
-      expect(fake_circle.attr).toHaveBeenCalledWith("stroke", stroke_color);
+
+      expect(circle.attr("stroke")).toBe(stroke_color);
     });
 
     it("draws the circle with the specified fill color", function() {
       var fill_color = "#00CC00";
-      var fake_circle = jasmine.createSpyObj("circle", ["attr"]);
-      var spy = spyOn(resume_timeline.paper, "circle").andReturn(fake_circle);
-      resume_timeline.drawPoint(10, 10, {
+      var circle = resume_timeline.drawPoint(10, 10, {
         "fill-color": fill_color
       });
-      expect(fake_circle.attr).toHaveBeenCalledWith("fill", fill_color);
+      expect(circle.attr("fill")).toBe(fill_color);
     });
 
     describe("when label is specified", function() {
