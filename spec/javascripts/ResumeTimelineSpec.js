@@ -369,6 +369,11 @@ describe("ResumeTimeline", function() {
       expect(resume_timeline.paper.rect).toHaveBeenCalled();
     });
 
+    it("returns a rectangle", function() {
+      var rect = resume_timeline.drawBox();
+      expect(rect.type).toEqual("rect");
+    });
+
     it("draws the rectangle with the specified coordinates", function() {
       var x = 20;
       var y = 30;
@@ -394,52 +399,45 @@ describe("ResumeTimeline", function() {
 
     it("draws the rectangle with the specified stroke width", function() {
       var stroke_width = 2;
-      var fake_rect = jasmine.createSpyObj("rect", ["attr"]);
-      var spy = spyOn(resume_timeline.paper, "rect").andReturn(fake_rect);
-      resume_timeline.drawBox(10, 10, 10, 10, {
+      var rect = resume_timeline.drawBox(10, 10, 10, 10, {
         "stroke-width": stroke_width
       });
-      expect(fake_rect.attr).toHaveBeenCalledWith("stroke-width", stroke_width);
+
+      expect(rect.attr("stroke-width")).toBe(stroke_width);
     });
 
     it("draws the rectangle with the specified stroke color", function() {
       var stroke_color = "#00CC00";
-      var fake_rect = jasmine.createSpyObj("rect", ["attr"]);
-      var spy = spyOn(resume_timeline.paper, "rect").andReturn(fake_rect);
-      resume_timeline.drawBox(10, 10, 10, 10, {
+      var rect = resume_timeline.drawBox(10, 10, 10, 10, {
         "stroke-color": stroke_color
       });
-      expect(fake_rect.attr).toHaveBeenCalledWith("stroke", stroke_color);
+
+      expect(rect.attr("stroke")).toBe(stroke_color);
     });
 
     it("draws the rectangle with the specified stroke opacity", function() {
-      var stroke_opacity = "#00CC00";
-      var fake_rect = jasmine.createSpyObj("rect", ["attr"]);
-      var spy = spyOn(resume_timeline.paper, "rect").andReturn(fake_rect);
-      resume_timeline.drawBox(10, 10, 10, 10, {
+      var stroke_opacity = "0.5";
+      var rect = resume_timeline.drawBox(10, 10, 10, 10, {
         "stroke-opacity": stroke_opacity
       });
-      expect(fake_rect.attr).toHaveBeenCalledWith("stroke-opacity", stroke_opacity);
+
+      expect(rect.attr("stroke-opacity")).toBe(stroke_opacity);
     });
 
     it("draws the rectangle with the specified fill color", function() {
       var fill_color = "#00CC00";
-      var fake_rect = jasmine.createSpyObj("rect", ["attr"]);
-      var spy = spyOn(resume_timeline.paper, "rect").andReturn(fake_rect);
-      resume_timeline.drawBox(10, 10, 10, 10, {
+      var rect = resume_timeline.drawBox(10, 10, 10, 10, {
         "fill-color": fill_color
       });
-      expect(fake_rect.attr).toHaveBeenCalledWith("fill", fill_color);
+      expect(rect.attr("fill")).toBe(fill_color);
     });
 
     it("draws the rectangle with the specified fill opacity", function() {
-      var fill_opacity = "#00CC00";
-      var fake_rect = jasmine.createSpyObj("rect", ["attr"]);
-      var spy = spyOn(resume_timeline.paper, "rect").andReturn(fake_rect);
-      resume_timeline.drawBox(10, 10, 10, 10, {
+      var fill_opacity = "0.3";
+      var rect = resume_timeline.drawBox(10, 10, 10, 10, {
         "fill-opacity": fill_opacity
       });
-      expect(fake_rect.attr).toHaveBeenCalledWith("fill-opacity", fill_opacity);
+      expect(rect.attr("fill-opacity")).toBe(fill_opacity);
     });
   });
 

@@ -286,6 +286,8 @@
     rect.attr("stroke", settings["stroke-color"]);
     rect.attr("stroke-width", settings["stroke-width"]);
     rect.attr("stroke-opacity", settings["stroke-opacity"]);
+
+    return rect;
   };
 
   ResumeTimeline.prototype.drawHorizontalLine = function(x, y, width, options) {
