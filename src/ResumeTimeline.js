@@ -300,6 +300,8 @@
     var line = this.paper.path("M" + x + "," + y + "H" + end_x);
     line.attr("stroke", settings["stroke-color"]);
     line.attr("stroke-width", settings["stroke-width"]);
+
+    return line;
   };
 
   ResumeTimeline.prototype.drawPoint = function(x, y, options) {

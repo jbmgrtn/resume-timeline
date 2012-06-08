@@ -579,6 +579,11 @@ describe("ResumeTimeline", function() {
       expect(resume_timeline.paper.path).toHaveBeenCalled();
     });
 
+    it("returns the path", function() {
+      var path = resume_timeline.drawHorizontalLine(0, 0, 0);;
+      expect(path.type).toEqual("path");
+    });
+
     it("moves to the specified coordinates", function() {
       var x = 10;
       var y = 10;
@@ -598,22 +603,18 @@ describe("ResumeTimeline", function() {
 
     it("draws the line with the specified stroke width", function() {
       var stroke_width = 3;
-      var fake_path = jasmine.createSpyObj("path", ["attr"]);
-      var spy = spyOn(resume_timeline.paper, "path").andReturn(fake_path);
-      resume_timeline.drawHorizontalLine(10, 10, 10, {
+      var line = resume_timeline.drawHorizontalLine(10, 10, 10, {
         "stroke-width": stroke_width
       });
-      expect(fake_path.attr).toHaveBeenCalledWith("stroke-width", stroke_width);
+      expect(line.attr("stroke-width")).toBe(stroke_width);
     });
 
     it("draws the line with the specified stroke color", function() {
       var stroke_color = "#0000CC";
-      var fake_path = jasmine.createSpyObj("path", ["attr"]);
-      var spy = spyOn(resume_timeline.paper, "path").andReturn(fake_path);
-      resume_timeline.drawHorizontalLine(10, 10, 10, {
+      var line = resume_timeline.drawHorizontalLine(10, 10, 10, {
         "stroke-color": stroke_color
       });
-      expect(fake_path.attr).toHaveBeenCalledWith("stroke", stroke_color  );
+      expect(line.attr("stroke")).toBe(stroke_color);
     });
   });
 
