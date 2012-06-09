@@ -329,6 +329,17 @@ describe("ResumeTimeline", function() {
         expect(spy.mostRecentCall.args[2]).toBe(title);
       });
     });
+
+    describe("draws the organization", function() {
+      it("draws the organization text", function() {
+        var org = "some organization";
+        var spy = spyOn(resume_timeline, "drawText");
+        resume_timeline.drawEntry(0, 0, {"organization": org}, {});
+
+        expect(resume_timeline.drawText).toHaveBeenCalled();
+        expect(spy.mostRecentCall.args[2]).toBe(org);
+      });
+    });
   });
 
   describe("drawText", function() {

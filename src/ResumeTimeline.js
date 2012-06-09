@@ -57,7 +57,9 @@
             "entries": [
               {
                 "start-date": new Date("January 2001"),
-                "end-date": new Date("October 2003")
+                "end-date": new Date("October 2003"),
+                "title": "activity title",
+                "organization": "organization"
               }
             ]
           }
@@ -188,6 +190,8 @@
     var timeline = this.drawTimeline(x, y, settings);
     set.push(timeline);
 
+    var text_set = this.paper.set();
+
     if(entry["title"]) {
       var title_x = timeline.getBBox().x2 + 5;
       var title_y = (timeline.getBBox().y + timeline.getBBox().height / 2);
@@ -195,8 +199,19 @@
         "text-anchor": "start",
         "font-weight": "bold"
       });
-      set.push(title);
+      text_set.push(title);
     }
+
+    if(entry["organization"]) {
+      var org_x = timeline.getBBox().x2 + 5;
+      var org_y = text_set.getBBox().y2 + 5;
+      var org = this.drawText(org_x, org_y, entry["organization"], {
+        "text-anchor": "start"
+      });
+      set.push(org);
+    }
+
+    set.push(text_set);
 
     return set;
   };
