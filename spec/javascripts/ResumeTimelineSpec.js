@@ -133,6 +133,11 @@ describe("ResumeTimeline", function() {
       resume_timeline.createPaper();
     });
 
+    it("returns a set", function() {
+      var set = resume_timeline.drawSection(10, 10, 10, {entries: []});
+      expect(set.type).toBe("set");
+    });
+
     describe("draws a content box", function() {
       beforeEach(function() {
         spyOn(resume_timeline, "drawEntries");

@@ -128,25 +128,29 @@
   ResumeTimeline.prototype.drawSection = function(x, y, height, options) {
     var fill_color = options["fill-color"] || null;
 
-    this.drawBox(x, y, this.width, height, {
+    var set = this.paper.set();
+
+    set.push(this.drawBox(x, y, this.width, height, {
       "fill-color": fill_color,
       "fill-opacity": 0.2
-    });
+    }));
 
-    this.drawBox(x, y, 30, height, {
+    set.push(this.drawBox(x, y, 30, height, {
       "fill-color": fill_color,
       "fill-opacity": 1
-    });
+    }));
 
-    this.drawText(30 / 2, y + height / 2, options.label, {
+    set.push(this.drawText(30 / 2, y + height / 2, options.label, {
       rotation: -90,
       "fill-color": "#fff",
       "font-size": 20
-    });
+    }));
 
-    this.drawEntries(x, y, options.entries, {
+    set.push(this.drawEntries(x, y, options.entries, {
       "stroke-color": options["fill-color"]
-    });
+    }));
+
+    return set;
   };
 
   ResumeTimeline.prototype.drawEntries = function(x, y, entries, options) {
