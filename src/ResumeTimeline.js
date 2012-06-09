@@ -262,12 +262,17 @@
     }, options);
 
     var text = this.paper.text(x, y, label);
-    text.attr("fill", settings["fill-color"]);
-    text.attr("font-size", settings["font-size"]);
+
+    text.attr({
+      "fill": settings["fill-color"],
+      "font-size": settings["font-size"]
+    });
 
     if(settings.rotation) {
       text.rotate(settings.rotation);
     }
+
+    return text;
   };
 
   ResumeTimeline.prototype.drawBox = function(x, y, width, height, options) {

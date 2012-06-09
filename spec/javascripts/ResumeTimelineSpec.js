@@ -307,6 +307,11 @@ describe("ResumeTimeline", function() {
       expect(resume_timeline.paper.text).toHaveBeenCalled();
     });
 
+    it("returns the text", function() {
+      var text = resume_timeline.drawText();
+      expect(text.type).toEqual("text");
+    });
+
     it("draws text at the specified coordinates", function() {
       var x = 10;
       var y = 20;
@@ -325,22 +330,18 @@ describe("ResumeTimeline", function() {
 
     it("draws the text with the specified fill", function() {
       var fill_color = "#00CC00";
-      var fake_text = jasmine.createSpyObj("text", ["attr"]);
-      var spy = spyOn(resume_timeline.paper, "text").andReturn(fake_text);
-      resume_timeline.drawText(10, 10, "text", {
+      var text = resume_timeline.drawText(10, 10, "text", {
         "fill-color": fill_color
       });
-      expect(fake_text.attr).toHaveBeenCalledWith("fill", fill_color);
+      expect(text.attr("fill")).toBe(fill_color);
     });
 
     it("draws the text with the specified font-size", function() {
       var font_size = 20;
-      var fake_text = jasmine.createSpyObj("text", ["attr"]);
-      var spy = spyOn(resume_timeline.paper, "text").andReturn(fake_text);
-      resume_timeline.drawText(10, 10, "text", {
+      var text = resume_timeline.drawText(10, 10, "text", {
         "font-size": font_size
       });
-      expect(fake_text.attr).toHaveBeenCalledWith("font-size", font_size);
+      expect(text.attr("font-size")).toBe(font_size);
     });
 
     it("rotates the text with the specified rotation", function() {
