@@ -286,11 +286,13 @@
 
     var rect = this.paper.rect(x, y, width, height);
 
-    rect.attr("fill", settings["fill-color"]);
-    rect.attr("fill-opacity", settings["fill-opacity"]);
-    rect.attr("stroke", settings["stroke-color"]);
-    rect.attr("stroke-width", settings["stroke-width"]);
-    rect.attr("stroke-opacity", settings["stroke-opacity"]);
+    rect.attr({
+      "fill": settings["fill-color"],
+      "fill-opacity": settings["fill-opacity"],
+      "stroke": settings["stroke-color"],
+      "stroke-width": settings["stroke-width"],
+      "stroke-opacity": settings["stroke-opacity"]
+    });
 
     return rect;
   };
@@ -303,8 +305,11 @@
 
     var end_x = x + width;
     var line = this.paper.path("M" + x + "," + y + "H" + end_x);
-    line.attr("stroke", settings["stroke-color"]);
-    line.attr("stroke-width", settings["stroke-width"]);
+
+    line.attr({
+      "stroke": settings["stroke-color"],
+      "stroke-width": settings["stroke-width"]
+    });
 
     return line;
   };
@@ -320,9 +325,12 @@
 
     var radius = (settings["width"] - settings["stroke-width"]) / 2;
     var circle = this.paper.circle(x, y, radius);
-    circle.attr("fill", settings["fill-color"]);
-    circle.attr("stroke", settings["stroke-color"]);
-    circle.attr("stroke-width", settings["stroke-width"]);
+
+    circle.attr({
+      "fill": settings["fill-color"],
+      "stroke": settings["stroke-color"],
+      "stroke-width": settings["stroke-width"]
+    });
 
     if(settings.label) {
       var font_size = 12;
