@@ -234,6 +234,8 @@
     var start_date = settings["start-date"] || new Date(this.options.startYear, 0, 1);
     var end_date = settings["end-date"] || new Date(this.options.endYear, 0, 1);
 
+    var set = this.paper.set();
+
     for(var i=0; i < point_count; i++) {
       var point_x = origin_x + (circle_width + circle_padding) * i;
       var label = settings["display-labels"] ? current_year : null;
@@ -241,17 +243,21 @@
       var current_year_date = new Date(current_year, 0, 1);
 
       if(current_year_date >= start_date && current_year_date <= end_date) {
-        this.drawPoint(point_x, origin_y, {
+        var point = this.drawPoint(point_x, origin_y, {
           width: circle_width,
           "stroke-width": circle_stroke_width,
           "stroke-color": settings["stroke-color"],
           "fill-color": settings["fill-color"],
           "label": label
         });
+
+        set.push(point);
       }
 
       current_year += 1;
     }
+
+    return set;
   };
 
   ResumeTimeline.prototype.drawText = function(x, y, label, options) {

@@ -513,6 +513,11 @@ describe("ResumeTimeline", function() {
       resume_timeline.createPaper();
     });
 
+    it("returns a set", function() {
+      var set = resume_timeline.drawTimelinePoints();
+      expect(set.type).toBe("set");
+    });
+
     it("draws a circle for each year", function() {
       var count = endYear - startYear + 1;
 
