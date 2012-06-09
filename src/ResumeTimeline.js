@@ -185,7 +185,19 @@
       "end-date": entry["end-date"]
     }, options);
 
-    set.push(this.drawTimeline(x, y, settings));
+    var timeline = this.drawTimeline(x, y, settings);
+    set.push(timeline);
+
+    if(entry["title"]) {
+      var title_x = timeline.getBBox().x2 + 5;
+      var title_y = (timeline.getBBox().y + timeline.getBBox().height / 2);
+      var title = this.drawText(title_x, title_y, entry["title"], {
+        "text-anchor": "start",
+        "font-weight": "bold"
+      });
+      set.push(title);
+    }
+
     return set;
   };
 
@@ -281,14 +293,18 @@
     var settings = $.extend({
       "rotation": null,
       "fill-color": "#000",
-      "font-size": 12
+      "font-size": 12,
+      "text-anchor": "middle",
+      "font-weight": "normal"
     }, options);
 
     var text = this.paper.text(x, y, label);
 
     text.attr({
       "fill": settings["fill-color"],
-      "font-size": settings["font-size"]
+      "font-size": settings["font-size"],
+      "text-anchor": settings["text-anchor"],
+      "font-weight": settings["font-weight"]
     });
 
     if(settings.rotation) {

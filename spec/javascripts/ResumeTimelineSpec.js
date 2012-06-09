@@ -318,6 +318,17 @@ describe("ResumeTimeline", function() {
       expect(spy.mostRecentCall.args[0]).toBe(x);
       expect(spy.mostRecentCall.args[0]).toBe(y);
     });
+
+    describe("draws the title", function() {
+      it("draws the title text", function() {
+        var title = "some title";
+        var spy = spyOn(resume_timeline, "drawText");
+        resume_timeline.drawEntry(0, 0, {"title": title}, {});
+
+        expect(resume_timeline.drawText).toHaveBeenCalled();
+        expect(spy.mostRecentCall.args[2]).toBe(title);
+      });
+    });
   });
 
   describe("drawText", function() {
@@ -370,6 +381,22 @@ describe("ResumeTimeline", function() {
         "font-size": font_size
       });
       expect(text.attr("font-size")).toBe(font_size);
+    });
+
+    it("draws the text with the specified font-weight", function() {
+      var font_weight = "bold";
+      var text = resume_timeline.drawText(10, 10, "text", {
+        "font-weight": font_weight
+      });
+      expect(text.attr("font-weight")).toBe(font_weight);
+    });
+
+    it("draws the text with the specified text-anchor", function() {
+      var text_anchor = "left";
+      var text = resume_timeline.drawText(10, 10, "text", {
+        "text-anchor": text_anchor
+      });
+      expect(text.attr("text-anchor")).toBe(text_anchor);
     });
 
     it("rotates the text with the specified rotation", function() {
