@@ -114,15 +114,18 @@
     var section_y = this.timeline.getBBox().y + this.timeline.getBBox().y2;
     var section_height = (this.height - section_y) / this.options["sections"].length;
 
+    var set = this.paper.set()
+
     for(var i=0; i < this.options["sections"].length; i++) {
-      this.drawSection(
+      set.push(this.drawSection(
         section_x,
         section_y,
         section_height,
         this.options["sections"][i]
-      );
+      ));
       section_y += section_height;
     }
+    return set;
   };
 
   ResumeTimeline.prototype.drawSection = function(x, y, height, options) {
@@ -161,11 +164,14 @@
     var entry_y = y;
 
     var set = this.paper.set();
-    for(var i=0; i < entries.length; i++) {
-      set.push(this.drawEntry(entry_x, entry_y, entries[i], {
-        "stroke-color": settings["stroke-color"]
-      }));
-      entry_y += 40;
+
+    if(entries){
+      for(var i=0; i < entries.length; i++) {
+        set.push(this.drawEntry(entry_x, entry_y, entries[i], {
+          "stroke-color": settings["stroke-color"]
+        }));
+        entry_y += 40;
+      }
     }
     return set;
   };

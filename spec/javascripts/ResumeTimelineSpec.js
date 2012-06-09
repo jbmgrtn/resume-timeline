@@ -111,6 +111,16 @@ describe("ResumeTimeline", function() {
       resume_timeline = container.data(plugin_name);
     });
 
+    it("returns a set", function() {
+      var sections = [{}, {}];
+      resume_timeline.options = {
+        "sections": sections
+      };
+
+      var set = resume_timeline.drawSections();
+      expect(set.type).toBe("set");
+    });
+
     it("draws each section", function() {
       var sections = [{}, {}];
       resume_timeline.options = {
