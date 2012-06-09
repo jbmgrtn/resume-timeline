@@ -27,7 +27,9 @@
             "entries": [
               {
                 "start-date": new Date("January 2, 2005"),
-                "end-date": new Date("January 2007")
+                "end-date": new Date("January 2007"),
+                "title": "Job title 1",
+                "organization": "Vandalay Industries"
               },
               {
                 "start-date": new Date("January 2001"),
@@ -162,6 +164,7 @@
   };
 
   ResumeTimeline.prototype.drawEntry = function(x, y, entry, options) {
+    var set = this.paper.set();
     var settings = $.extend({
       "stroke-color": "#000",
       "fill-color": "#fff",
@@ -169,7 +172,8 @@
       "end-date": entry["end-date"]
     }, options);
 
-    this.drawTimeline(x, y, settings);
+    set.push(this.drawTimeline(x, y, settings));
+    return set;
   };
 
   ResumeTimeline.prototype.drawTimeline = function(start_x, start_y, options) {

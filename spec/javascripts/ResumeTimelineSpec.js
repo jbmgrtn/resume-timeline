@@ -282,6 +282,11 @@ describe("ResumeTimeline", function() {
       expect(resume_timeline.drawTimeline).toHaveBeenCalled();
     });
 
+    it("returns a set", function() {
+      var set = resume_timeline.drawEntry(0, 0, {}, {});
+      expect(set.type).toEqual("set");
+    });
+
     it("draws the timeline at the specified coordinates", function() {
       var x = 5;
       var y = 5;
