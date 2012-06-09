@@ -459,25 +459,9 @@ describe("ResumeTimeline", function() {
       resume_timeline.createPaper();
     });
 
-    describe("set", function() {
-      it("starts the set", function() {
-        spyOn(resume_timeline.paper, "setStart");
-        resume_timeline.drawTimeline();
-        expect(resume_timeline.paper.setStart).toHaveBeenCalled();
-      });
-
-      it("finshes the set", function() {
-        spyOn(resume_timeline.paper, "setFinish");
-        resume_timeline.drawTimeline();
-        expect(resume_timeline.paper.setFinish).toHaveBeenCalled();
-      });
-
-      it("sets the timeline to the set", function() {
-        var set = "set";
-        spyOn(resume_timeline.paper, "setFinish").andReturn(set);
-        resume_timeline.drawTimeline();
-        expect(resume_timeline.timeline).toEqual(set);
-      });
+    it("returns a set", function() {
+      var set = resume_timeline.drawTimeline();
+      expect(set.type).toBe("set");
     });
 
     describe("draws a horizontal line", function() {

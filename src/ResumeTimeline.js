@@ -94,7 +94,7 @@
 
   ResumeTimeline.prototype.draw = function() {
     this.createPaper();
-    this.drawTimeline(0, 0, {
+    this.timeline = this.drawTimeline(0, 0, {
       "display-labels": true
     });
     this.drawSections();
@@ -198,21 +198,21 @@
       line_width = line_width * time_diff / origin_time_diff;
     }
 
-    this.paper.setStart();
-    this.drawHorizontalLine(line_x, origin_y, line_width, {
+    var set = this.paper.set();
+    set.push(this.drawHorizontalLine(line_x, origin_y, line_width, {
       "stroke-width": 2,
       "stroke-color": settings["stroke-color"]
-    });
+    }));
 
-    this.drawTimelinePoints(origin_x, origin_y, width, {
+    set.push(this.drawTimelinePoints(origin_x, origin_y, width, {
       "stroke-color": settings["stroke-color"],
       "fill-color": settings["fill-color"],
       "display-labels": settings["display-labels"],
       "start-date": settings["start-date"],
       "end-date": settings["end-date"]
-    });
+    }));
 
-    this.timeline = this.paper.setFinish();
+    return set;
   };
 
   ResumeTimeline.prototype.drawTimelinePoints = function(x, y, width, options) {
