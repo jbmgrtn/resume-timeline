@@ -265,6 +265,14 @@ describe("ResumeTimeline", function() {
       resume_timeline.drawEntries(0, 0, entries, {});
       expect(spy.callCount).toBe(entries.length);
     });
+
+    it("returns a set", function() {
+      var entries = [
+        {}, {}, {}
+      ];
+      var set = resume_timeline.drawEntries(0, 0, entries, {});
+      expect(set.type).toEqual("set");
+    });
   });
 
   describe("drawEntry", function() {

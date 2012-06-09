@@ -155,12 +155,15 @@
 
     var entry_x = x;
     var entry_y = y;
+
+    var set = this.paper.set();
     for(var i=0; i < entries.length; i++) {
-      this.drawEntry(entry_x, entry_y, entries[i], {
+      set.push(this.drawEntry(entry_x, entry_y, entries[i], {
         "stroke-color": settings["stroke-color"]
-      });
+      }));
       entry_y += 40;
     }
+    return set;
   };
 
   ResumeTimeline.prototype.drawEntry = function(x, y, entry, options) {
