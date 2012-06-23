@@ -208,9 +208,8 @@
       var org = this.drawText(org_x, org_y, entry["organization"], {
         "text-anchor": "start"
       });
-      set.push(org);
+      text_set.push(org);
     }
-
     set.push(text_set);
 
     return set;
