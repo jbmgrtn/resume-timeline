@@ -7,7 +7,74 @@
     <script type="text/javascript">
 
 $(function() {
-  $("#resume-timeline").resumeTimeline();
+  $("#resume-timeline").resumeTimeline({
+    startYear: 2000,
+    endYear: 2015,
+    x: 30,
+    y: 30,
+    sections: [
+      {
+        "label": "Work Experience",
+        "fill-color": "#0071BC",
+        "entries": [
+          {
+            "start-date": new Date("October 2011"),
+            "end-date": new Date(),
+            "title": "Software Engineer I",
+            "organization": "Vivisimo"
+          },
+          {
+            "start-date": new Date("August 2007"),
+            "end-date": new Date("October 2011"),
+            "title": "Senior Applications Engineer",
+            "organization": "Vivisimo"
+          },
+          {
+            "start-date": new Date("January 2007"),
+            "end-date": new Date("December 2007"),
+            "title": "Student Web Developer",
+            "organization": "University of Pittsburgh"
+          },
+          {
+            "start-date": new Date("January 2005"),
+            "end-date": new Date("August 2006"),
+            "title": "Co-op Student",
+            "organization": "ANSYS, Inc."
+          }
+        ]
+      },
+      {
+        "label": "Education",
+        "fill-color": "#009245",
+        "entries": [
+          {
+            "start-date": new Date("August 2003"),
+            "end-date": new Date("August 2007"),
+            "title": "B.S. Computer Engineering",
+            "organization": "University of Pittsburgh"
+          }
+        ]
+      },
+      {
+        "label": "Activities",
+        "fill-color": "#C1272D",
+        "entries": [
+          {
+            "start-date": new Date("June 2012"),
+            "end-date": new Date("December 2012"),
+            "title": "Organizer",
+            "organization": "Girl Develop IT Pittsburgh"
+          },
+          {
+            "start-date": new Date("November 2011"),
+            "end-date": new Date(),
+            "title": "Organizer",
+            "organization": "Steel City Ruby Conf"
+          }
+        ]
+      }
+    ]
+  });
 });
 
 
