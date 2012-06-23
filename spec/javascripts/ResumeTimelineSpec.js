@@ -636,7 +636,7 @@ describe("ResumeTimeline", function() {
     });
 
     it("returns the path", function() {
-      var path = resume_timeline.drawHorizontalLine(0, 0, 0);;
+      var path = resume_timeline.drawHorizontalLine(0, 0, 0);
       expect(path.type).toEqual("path");
     });
 
