@@ -248,13 +248,18 @@
       "stroke-color": settings["stroke-color"]
     }));
 
-    set.push(this.drawTimelinePoints(origin_x, origin_y, width, {
+    var timeline_points = this.drawTimelinePoints(origin_x, origin_y, width, {
       "stroke-color": settings["stroke-color"],
       "fill-color": settings["fill-color"],
       "display-labels": settings["display-labels"],
       "start-date": settings["start-date"],
       "end-date": settings["end-date"]
-    }));
+    });
+
+    // Necessary to prevent bounding box issues
+    if(timeline_points && timeline_points.length > 0) {
+      set.push(timeline_points);
+    }
 
     return set;
   };
