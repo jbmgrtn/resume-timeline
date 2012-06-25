@@ -105,18 +105,17 @@
   };
 
   ResumeTimeline.prototype.createPaper = function() {
-    var height = this.height;
-    var width = this.width;
+    var height = this.height,
+        width  = this.width;
 
     this.paper = Raphael(this.element, height, width);
   };
 
   ResumeTimeline.prototype.drawSections = function() {
-    var section_x = 0;
-    var section_y = this.timeline.getBBox().y + this.timeline.getBBox().y2;
-    var section_height = (this.height - section_y) / this.options["sections"].length;
-
-    var set = this.paper.set();
+    var section_x = 0,
+        section_y = this.timeline.getBBox().y + this.timeline.getBBox().y2,
+        section_height = (this.height - section_y) / this.options["sections"].length,
+        set = this.paper.set();
 
     for(var i=0; i < this.options["sections"].length; i++) {
       set.push(this.drawSection(
@@ -131,9 +130,8 @@
   };
 
   ResumeTimeline.prototype.drawSection = function(x, y, height, options) {
-    var fill_color = options["fill-color"] || null;
-
-    var set = this.paper.set();
+    var fill_color = options["fill-color"] || null,
+        set = this.paper.set();
 
     set.push(this.drawBox(x, y, this.width, height, {
       "fill-color": fill_color,
@@ -159,13 +157,10 @@
   };
 
   ResumeTimeline.prototype.drawEntries = function(x, y, entries, options) {
-    var settings = $.extend({
-    }, options);
-
-    var entry_x = x;
-    var entry_y = y;
-
-    var set = this.paper.set();
+    var settings = $.extend({}, options),
+        entry_x  = x,
+        entry_y  = y,
+        set      = this.paper.set();
 
     if(entries){
       for(var i=0; i < entries.length; i++) {
@@ -179,21 +174,22 @@
   };
 
   ResumeTimeline.prototype.drawEntry = function(x, y, entry, options) {
-    var set = this.paper.set();
-    var settings = $.extend({
-      "stroke-color": "#000",
-      "fill-color": "#fff",
-      "start-date": entry["start-date"],
-      "end-date": entry["end-date"],
-      "padding": 5
-    }, options);
+    var timeline, text_x, text_y, text_width,
+        set = this.paper.set(),
+        settings = $.extend({
+          "stroke-color": "#000",
+          "fill-color": "#fff",
+          "start-date": entry["start-date"],
+          "end-date": entry["end-date"],
+          "padding": 5
+        }, options);
 
-    var timeline = this.drawTimeline(x, y, settings);
+    timeline = this.drawTimeline(x, y, settings);
     set.push(timeline);
 
-    var text_x = timeline.getBBox().x2 + settings["padding"];
-    var text_y = (timeline.getBBox().y + timeline.getBBox().height / 2);
-    var text_width = timeline.getBBox().width;
+    text_x = timeline.getBBox().x2 + settings["padding"];
+    text_y = (timeline.getBBox().y + timeline.getBBox().height / 2);
+    text_width = timeline.getBBox().width;
     set.push(this.drawEntryText(text_x, text_y, text_width, entry, settings));
 
     return set;
@@ -201,10 +197,10 @@
 
   ResumeTimeline.prototype.drawEntryText = function(x, y, width, entry, options) {
     var settings = $.extend({
-      "padding": 5
-    }, options);
+          "padding": 5
+        }, options),
+        text_set = this.paper.set();
 
-    var text_set = this.paper.set();
     if(entry["title"]) {
       var title = this.drawText(x, y, entry["title"], {
         "text-anchor": "start",
@@ -214,11 +210,11 @@
     }
 
     if(entry["organization"]) {
-      var org_x = x + settings["padding"];
-      var org_y = text_set.getBBox().y2 + settings["padding"];
-      var org = this.drawText(org_x, org_y, entry["organization"], {
-        "text-anchor": "start"
-      });
+      var org_x = x + settings["padding"],
+          org_y = text_set.getBBox().y2 + settings["padding"],
+          org = this.drawText(org_x, org_y, entry["organization"], {
+            "text-anchor": "start"
+          });
       text_set.push(org);
     }
 
@@ -236,12 +232,11 @@
 
   ResumeTimeline.prototype.drawTimeline = function(start_x, start_y, options) {
     var settings = $.extend({
-      "fill-color": "#fff",
-      "stroke-color": "#000",
-      "display-labels": false
-    }, options);
-
-    var padding = 30;
+          "fill-color": "#fff",
+          "stroke-color": "#000",
+          "display-labels": false
+        }, options),
+        padding = 30;
 
     var origin_x = start_x + this.options["x"] + padding;
     var origin_y = start_y + this.options["y"];
@@ -284,15 +279,15 @@
 
   ResumeTimeline.prototype.drawTimelinePoints = function(x, y, width, options) {
     var settings = $.extend({
-      "fill-color": "#fff",
-      "stroke-color": "#000",
-      "display-labels": false
-    }, options);
+          "fill-color": "#fff",
+          "stroke-color": "#000",
+          "display-labels": false
+        }, options),
+        origin_x = x,
+        origin_y = y,
+        circle_width = 10,
+        circle_stroke_width = 2;
 
-    var origin_x = x;
-    var origin_y = y;
-    var circle_width = 10;
-    var circle_stroke_width = 2;
     var point_count = this.options.endYear - this.options.startYear + 1;
     var circle_padding = (width - circle_width * (point_count - 1)) / (point_count - 1);
 
@@ -306,7 +301,6 @@
     for(var i=0; i < point_count; i++) {
       var point_x = origin_x + (circle_width + circle_padding) * i;
       var label = settings["display-labels"] ? current_year : null;
-
       var current_year_date = new Date(current_year, 0, 1);
 
       if(current_year_date >= start_date && current_year_date <= end_date) {
@@ -329,14 +323,13 @@
 
   ResumeTimeline.prototype.drawText = function(x, y, label, options) {
     var settings = $.extend({
-      "rotation": null,
-      "fill-color": "#000",
-      "font-size": 12,
-      "text-anchor": "middle",
-      "font-weight": "normal"
-    }, options);
-
-    var text = this.paper.text(x, y, label);
+          "rotation": null,
+          "fill-color": "#000",
+          "font-size": 12,
+          "text-anchor": "middle",
+          "font-weight": "normal"
+        }, options),
+        text = this.paper.text(x, y, label);
 
     text.attr({
       "fill": settings["fill-color"],
@@ -354,14 +347,13 @@
 
   ResumeTimeline.prototype.drawBox = function(x, y, width, height, options) {
     var settings = $.extend({
-      "stroke-width": "none",
-      "stroke-color": "#000",
-      "stroke-opacity": 0,
-      "fill-color": "#fff",
-      "fill-opacity": 1
-    }, options);
-
-    var rect = this.paper.rect(x, y, width, height);
+          "stroke-width": "none",
+          "stroke-color": "#000",
+          "stroke-opacity": 0,
+          "fill-color": "#fff",
+          "fill-opacity": 1
+        }, options),
+    rect = this.paper.rect(x, y, width, height);
 
     rect.attr({
       "fill": settings["fill-color"],
@@ -376,12 +368,11 @@
 
   ResumeTimeline.prototype.drawHorizontalLine = function(x, y, width, options) {
     var settings = $.extend({
-      "stroke-width": 1,
-      "stroke-color": "#000"
-    }, options);
-
-    var end_x = x + width;
-    var line = this.paper.path("M" + x + "," + y + "H" + end_x);
+          "stroke-width": 1,
+          "stroke-color": "#000"
+        }, options),
+        end_x = x + width,
+        line = this.paper.path("M" + x + "," + y + "H" + end_x);
 
     line.attr({
       "stroke": settings["stroke-color"],
@@ -393,15 +384,14 @@
 
   ResumeTimeline.prototype.drawPoint = function(x, y, options) {
     var settings = $.extend({
-      "width": 10,
-      "stroke-width": 1,
-      "stroke-color": "#000",
-      "fill-color": "#fff",
-      "label": null
-    }, options);
-
-    var radius = (settings["width"] - settings["stroke-width"]) / 2;
-    var circle = this.paper.circle(x, y, radius);
+          "width": 10,
+          "stroke-width": 1,
+          "stroke-color": "#000",
+          "fill-color": "#fff",
+          "label": null
+        }, options),
+        radius = (settings["width"] - settings["stroke-width"]) / 2,
+        circle = this.paper.circle(x, y, radius);
 
     circle.attr({
       "fill": settings["fill-color"],
