@@ -116,7 +116,7 @@
     var section_y = this.timeline.getBBox().y + this.timeline.getBBox().y2;
     var section_height = (this.height - section_y) / this.options["sections"].length;
 
-    var set = this.paper.set()
+    var set = this.paper.set();
 
     for(var i=0; i < this.options["sections"].length; i++) {
       set.push(this.drawSection(
@@ -184,18 +184,29 @@
       "stroke-color": "#000",
       "fill-color": "#fff",
       "start-date": entry["start-date"],
-      "end-date": entry["end-date"]
+      "end-date": entry["end-date"],
+      "padding": 5
     }, options);
 
     var timeline = this.drawTimeline(x, y, settings);
     set.push(timeline);
 
-    var text_set = this.paper.set();
+    var text_x = timeline.getBBox().x2 + settings["padding"];
+    var text_y = (timeline.getBBox().y + timeline.getBBox().height / 2);
+    var text_width = timeline.getBBox().width;
+    set.push(this.drawEntryText(text_x, text_y, text_width, entry, settings));
 
+    return set;
+  };
+
+  ResumeTimeline.prototype.drawEntryText = function(x, y, width, entry, options) {
+    var settings = $.extend({
+      "padding": 5
+    }, options);
+
+    var text_set = this.paper.set();
     if(entry["title"]) {
-      var title_x = timeline.getBBox().x2 + 5;
-      var title_y = (timeline.getBBox().y + timeline.getBBox().height / 2);
-      var title = this.drawText(title_x, title_y, entry["title"], {
+      var title = this.drawText(x, y, entry["title"], {
         "text-anchor": "start",
         "font-weight": "bold"
       });
@@ -203,16 +214,24 @@
     }
 
     if(entry["organization"]) {
-      var org_x = timeline.getBBox().x2 + 5;
-      var org_y = text_set.getBBox().y2 + 5;
+      var org_x = x + settings["padding"];
+      var org_y = text_set.getBBox().y2 + settings["padding"];
       var org = this.drawText(org_x, org_y, entry["organization"], {
         "text-anchor": "start"
       });
       text_set.push(org);
     }
-    set.push(text_set);
 
-    return set;
+    // Shift text left if it is cut off
+    if(text_set.getBBox().x2 > this.width) {
+      var shift = width + settings["padding"] * 2;
+      text_set.transform("t-" + shift + ",0");
+      text_set.forEach(function(set) {
+        set.attr("text-anchor", "end");
+      });
+    }
+
+    return text_set;
   };
 
   ResumeTimeline.prototype.drawTimeline = function(start_x, start_y, options) {

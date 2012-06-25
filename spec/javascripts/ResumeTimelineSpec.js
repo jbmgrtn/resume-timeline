@@ -300,7 +300,7 @@ describe("ResumeTimeline", function() {
     });
 
     it("draws the timeline", function() {
-      spyOn(resume_timeline, "drawTimeline");
+      spyOn(resume_timeline, "drawTimeline").andCallThrough();
       resume_timeline.drawEntry(0, 0, {}, {});
       expect(resume_timeline.drawTimeline).toHaveBeenCalled();
     });
@@ -313,17 +313,32 @@ describe("ResumeTimeline", function() {
     it("draws the timeline at the specified coordinates", function() {
       var x = 5;
       var y = 5;
-      var spy = spyOn(resume_timeline, "drawTimeline");
+      var spy = spyOn(resume_timeline, "drawTimeline").andCallThrough();
       resume_timeline.drawEntry(x, y, {}, {});
       expect(spy.mostRecentCall.args[0]).toBe(x);
       expect(spy.mostRecentCall.args[0]).toBe(y);
+    });
+  });
+
+  describe("drawEntryText", function() {
+    var resume_timeline;
+
+    beforeEach(function() {
+      container.resumeTimeline({ autoDraw: false});
+      resume_timeline = container.data(plugin_name);
+      resume_timeline.createPaper();
+    });
+
+    it("returns a set", function() {
+      var set = resume_timeline.drawEntryText(0, 0, 0, {}, {});
+      expect(set.type).toEqual("set");
     });
 
     describe("draws the title", function() {
       it("draws the title text", function() {
         var title = "some title";
         var spy = spyOn(resume_timeline, "drawText");
-        resume_timeline.drawEntry(0, 0, {"title": title}, {});
+        resume_timeline.drawEntryText(0, 0, 0, {"title": title}, {});
 
         expect(resume_timeline.drawText).toHaveBeenCalled();
         expect(spy.mostRecentCall.args[2]).toBe(title);
@@ -334,10 +349,30 @@ describe("ResumeTimeline", function() {
       it("draws the organization text", function() {
         var org = "some organization";
         var spy = spyOn(resume_timeline, "drawText");
-        resume_timeline.drawEntry(0, 0, {"organization": org}, {});
+        resume_timeline.drawEntryText(0, 0, 0, {"organization": org}, {});
 
         expect(resume_timeline.drawText).toHaveBeenCalled();
         expect(spy.mostRecentCall.args[2]).toBe(org);
+      });
+    });
+
+    describe("if the text is cut off", function() {
+      it("transforms it to the left", function() {
+        var set = resume_timeline.paper.set();
+        spyOn(set, "getBBox").andReturn({
+          x2: 1000
+        });
+        var set_spy = spyOn(resume_timeline.paper, "set").andReturn(set);
+        spyOn(set, "transform");
+        resume_timeline.drawEntryText(0, 0, 0,
+          {
+
+            "title": "some title",
+            "organiztion": "some organization"
+          },
+          {});
+
+        expect(set.transform).toHaveBeenCalled();
       });
     });
   });
