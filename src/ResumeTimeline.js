@@ -20,6 +20,7 @@
         endYear: 2015,
         x: 30,
         y: 30,
+        timelinePadding: [40, 40],
         sections: [
           {
             "label": "Work Experience",
@@ -124,36 +125,62 @@
         section_height,
         this.options["sections"][i]
       ));
-      section_y += section_height;
+      section_y = set.getBBox().y2;
     }
     return set;
   };
 
   ResumeTimeline.prototype.drawSection = function(x, y, height, options) {
-    var fill_color = options["fill-color"] || null,
+    var entries, title, current_height,
+        padding = this.options["timelinePadding"][0],
         set = this.paper.set();
 
-    set.push(this.drawBox(x, y, this.width, height, {
-      "fill-color": fill_color,
+    // Entries
+    entries = this.drawEntries(x, y, options.entries, {
+      "stroke-color": options["fill-color"]
+    });
+    set.push(entries);
+
+    // Title
+    current_height = set.getBBox().height + padding;
+    title = this.drawSectionTitle(y, current_height, options);
+    set.push(title);
+
+    // Background
+    current_height = set.getBBox().height + padding;
+    set.push(this.drawBox(x, y, this.width, current_height, {
+      "fill-color": options["fill-color"],
       "fill-opacity": 0.2
     }));
 
-    set.push(this.drawBox(x, y, 30, height, {
-      "fill-color": fill_color,
+    // Title Background
+    set.push(this.drawBox(x, y, padding, current_height, {
+      "fill-color": options["fill-color"],
       "fill-opacity": 1
     }));
 
-    set.push(this.drawText(30 / 2, y + height / 2, options.label, {
-      rotation: -90,
-      "fill-color": "#fff",
-      "font-size": 20
-    }));
-
-    set.push(this.drawEntries(x, y, options.entries, {
-      "stroke-color": options["fill-color"]
-    }));
+    entries.toFront();
+    title.toFront();
 
     return set;
+  };
+
+  ResumeTimeline.prototype.drawSectionTitle = function(y, current_height, options) {
+    var padding = this.options["timelinePadding"][0];
+
+    title = this.drawText(padding / 2,
+                          y + current_height / 2,
+                          options.label,
+                          {
+                            "fill-color": "#fff",
+                            "font-size": 20
+    });
+    final_height = Math.max(current_height, title.getBBox().width + padding);
+    move_text_y = (final_height - current_height) / 2;
+    title.transform("t0," + move_text_y);
+    title.rotate("-90");
+
+    return title;
   };
 
   ResumeTimeline.prototype.drawEntries = function(x, y, entries, options) {
@@ -167,9 +194,10 @@
         set.push(this.drawEntry(entry_x, entry_y, entries[i], {
           "stroke-color": settings["stroke-color"]
         }));
-        entry_y += 40;
+        entry_y += this.options["timelinePadding"][1];
       }
     }
+
     return set;
   };
 
@@ -234,12 +262,11 @@
           "fill-color": "#fff",
           "stroke-color": "#000",
           "display-labels": false
-        }, options),
-        padding = 30;
+        }, options);
 
-    var origin_x = start_x + this.options["x"] + padding;
+    var origin_x = start_x + this.options["x"] + this.options["timelinePadding"][0];
     var origin_y = start_y + this.options["y"];
-    var width = $(this.element).width() - origin_x - padding;
+    var width = $(this.element).width() - origin_x - this.options["timelinePadding"][0];
 
     var start_date = new Date(this.options.startYear, 0, 1);
     var end_date = new Date(this.options.endYear, 0, 1);
@@ -391,6 +418,8 @@
         }, options),
         radius = (settings["width"] - settings["stroke-width"]) / 2,
         circle = this.paper.circle(x, y, radius);
+
+        console.log(settings["fill-color"]);
 
     circle.attr({
       "fill": settings["fill-color"],
