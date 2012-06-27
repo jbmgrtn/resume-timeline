@@ -210,9 +210,8 @@
     }
 
     if(entry["organization"]) {
-      var org_x = x + settings["padding"],
-          org_y = text_set.getBBox().y2 + settings["padding"],
-          org = this.drawText(org_x, org_y, entry["organization"], {
+      var org_y = text_set.getBBox().y2 + settings["padding"],
+          org = this.drawText(x, org_y, entry["organization"], {
             "text-anchor": "start"
           });
       text_set.push(org);
