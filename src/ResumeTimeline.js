@@ -109,7 +109,7 @@
     var height = this.height,
         width  = this.width;
 
-    this.paper = Raphael(this.element, height, width);
+    this.paper = Raphael(this.element, width, height);
   };
 
   ResumeTimeline.prototype.drawSections = function() {
